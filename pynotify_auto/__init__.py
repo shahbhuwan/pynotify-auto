@@ -44,8 +44,15 @@ def _show_popup(msg, success=True):
             # Use powershell for a native Windows toast notification
             # We escape the message for PowerShell
             safe_msg = msg.replace('"', '""')
-            ps_script = f'[reflection.assembly]::loadwithpartialname("System.Windows.Forms"); $notify = new-object system.windows.forms.notifyicon; $notify.icon = [system.drawing.systemicons]::Information; $notify.visible = $true; $notify.showballoontip(10, "{title}", "{safe_msg}", [system.windows.forms.tooltipicon]::None)'
-            subprocess.run(["powershell", "-Command", ps_script], check=False)
+            ps_script = f"""
+            [reflection.assembly]::loadwithpartialname("System.Windows.Forms")
+            $notify = new-object system.windows.forms.notifyicon
+            $notify.icon = [system.drawing.systemicons]::Information
+            $notify.visible = $true
+            $notify.showballoontip(5000, "{title}", "{safe_msg}", [system.windows.forms.tooltipicon]::Info)
+            start-sleep -s 1
+            """
+            subprocess.run(["powershell", "-Command", ps_script], check=False, creationflags=0x08000000)
         elif sys.platform == "darwin":
             # macOS native notification
             subprocess.run(["osascript", "-e", f'display notification "{msg}" with title "{title}"'], check=False)
@@ -85,6 +92,14 @@ def _ping_on_exit():
     is_script = bool(sys.argv and sys.argv[0] and not sys.argv[0].startswith('<'))
     is_ipython = 'IPython' in sys.modules or 'ipykernel' in sys.modules
     
+    # Multi-worker protection: Only notify from the main process
+    try:
+        import multiprocessing
+        if multiprocessing.current_process().name != 'MainProcess':
+            return
+    except Exception:
+        pass
+
     if elapsed > threshold and is_script and not is_ipython:
         script_name = os.path.basename(sys.argv[0])
         status_text = "finished" if success else "FAILED"

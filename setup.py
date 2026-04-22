@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="pynotify-auto",
-    version="0.1.8",
+    version="0.1.9",
     author="Bhuwan Shah",
     description="Zero-Code automatic notifications for long-running Python scripts.",
     long_description=long_description,
