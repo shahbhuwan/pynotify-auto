@@ -100,8 +100,13 @@ def _ping_on_exit():
         prefix = "[SUCCESS]" if success else "[FAILED]"
         print(f"\n{prefix} [pynotify-auto] {msg}")
 
+# Global flag to check if the hook was initialized
+hook_active = False
+
 def install_hook():
     """Register the notification hook to run at exit."""
+    global hook_active
+    hook_active = True
     if not hasattr(atexit, "_pynotify_auto_hook_registered"):
         atexit.register(_ping_on_exit)
         setattr(atexit, "_pynotify_auto_hook_registered", True)
