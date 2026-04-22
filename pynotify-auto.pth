@@ -1,1 +1,2 @@
-import pynotify_auto; pynotify_auto.install_hook()
+try: import pynotify_auto; pynotify_auto.install_hook()
+except ImportError: pass
