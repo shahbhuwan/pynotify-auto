@@ -1,4 +1,4 @@
-# pynotify-auto 🚀
+# pynotify-auto
 
 **Zero-Code automatic notifications for long-running Python scripts.**
 
