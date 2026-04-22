@@ -1,2 +1,1 @@
-try: import pynotify_auto; pynotify_auto.install_hook()
-except ImportError: pass
+import sys; exec("try:\n    import pynotify_auto\n    pynotify_auto.install_hook()\nexcept:\n    pass")
