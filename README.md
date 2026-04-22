@@ -1,10 +1,20 @@
 # pynotify-auto
 
-**Zero-Code automatic notifications for long-running Python scripts.**
+[![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
+[![Build Status](https://github.com/shahbhuwan/pynotify-auto/workflows/CI/badge.svg)](https://github.com/shahbhuwan/pynotify-auto/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 
-Tired of checking your terminal every 5 minutes to see if your script finished? `pynotify-auto` automatically pings you (with a sound and a system notification) when any Python script runs for more than 5 seconds.
+**Zero-Code automatic notifications for any long-running Python script.**
 
-**No code changes required.** Just install and forget.
+Stop babysitting your terminal. Whether you're training models, processing datasets, or running complex simulations, `pynotify-auto` pings you the moment your task is done—so you can focus on what matters.
+
+## Why use this?
+Traditional notification libraries require you to manually add decorators or extra lines of code to every script. `pynotify-auto` is different: **it works automatically for every script in your environment.** 
+
+- **No Code Changes**: Install once, and it works for all your scripts.
+- **Smart Filtering**: It stays quiet for quick tasks and only alerts you for the ones that actually take time.
+- **Immediate Feedback**: Know exactly when your process finishes or fails, even if you're in another room.
 
 ## Features
 
@@ -20,19 +30,10 @@ Tired of checking your terminal every 5 minutes to see if your script finished? 
 pip install pynotify-auto
 ```
 
-## How it Works
+## Examples
 
-The library uses a Python Path Configuration file (`.pth`) to register an `atexit` hook during Python startup. This allows it to monitor the execution time of any script without you having to import anything manually.
-
-## Configuration
-
-You can customize the behavior using environment variables:
-
-- `PYNOTIFY_MODE`: Notification type. Options: `popup` (default), `sound`.
-- `PYNOTIFY_THRESHOLD`: Minimum execution time in seconds (default: `5.0`).
-- `PYNOTIFY_DISABLE`: Set to `1` to disable notifications for a specific run.
-
-### Examples
+### Using Environment Variables
+You can customize the behavior on the fly without changing any code:
 
 ```bash
 # Only get a sound notification (no popup)
@@ -42,15 +43,21 @@ python training.py
 # Only notify if script takes longer than 10 minutes
 export PYNOTIFY_THRESHOLD=600
 python long_process.py
+
+# Temporarily disable notifications for a specific run
+PYNOTIFY_DISABLE=1 python quick_test.py
 ```
 
-## Command Line Interface (CLI)
+### Using the Command Line (CLI)
+Test your settings or check your configuration directly from the terminal:
 
-Once installed, you can use the `pynotify-auto` command to test your settings:
+```bash
+# Trigger a test notification to see it in action
+pynotify-auto --test
 
-- `pynotify-auto --test`: Trigger a test notification.
-- `pynotify-auto --info`: View current mode and threshold settings.
-- `pynotify-auto --help`: Show all available commands.
+# Show your current settings (Mode, Threshold, Status)
+pynotify-auto --info
+```
 
 ## License
 
