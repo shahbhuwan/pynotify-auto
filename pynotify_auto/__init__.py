@@ -64,7 +64,8 @@ def _ping_on_exit():
     is_ipython = 'IPython' in sys.modules or 'ipykernel' in sys.modules
     
     if elapsed > threshold and is_script and not is_ipython:
-        msg = f"Task completed in {elapsed:.1f} seconds."
+        script_name = os.path.basename(sys.argv[0])
+        msg = f"'{script_name}' finished in {elapsed:.1f}s"
         
         if mode == "sound":
             _play_sound()
