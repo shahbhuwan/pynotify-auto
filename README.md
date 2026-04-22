@@ -20,11 +20,6 @@ Tired of checking your terminal every 5 minutes to see if your script finished? 
 pip install pynotify-auto
 ```
 
-### Via Conda
-```bash
-conda install -c conda-forge pynotify-auto
-```
-
 ## How it Works
 
 The library uses a Python Path Configuration file (`.pth`) to register an `atexit` hook during Python startup. This allows it to monitor the execution time of any script without you having to import anything manually.
