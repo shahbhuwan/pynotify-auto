@@ -17,28 +17,34 @@ def _get_threshold():
     except (ValueError, TypeError):
         return 5.0
 
-def _play_sound():
-    """Play a notification sound based on the platform."""
+def _play_sound(success=True):
+    """Play a notification sound based on the platform and status."""
     try:
         if sys.platform == "win32":
             import winsound
-            winsound.MessageBeep(winsound.MB_ICONASTERISK)
+            # Use different system sounds for success vs failure
+            tone = winsound.MB_ICONASTERISK if success else winsound.MB_ICONHAND
+            winsound.MessageBeep(tone)
         elif sys.platform == "darwin":
-            # macOS default alert sound
-            subprocess.run(["afplay", "/System/Library/Sounds/Glass.aiff"], check=False)
+            # macOS sounds
+            sound = "/System/Library/Sounds/Glass.aiff" if success else "/System/Library/Sounds/Basso.aiff"
+            subprocess.run(["afplay", sound], check=False)
         else:
             # Linux: try common beep or play command
             subprocess.run(["beep"], check=False, stderr=subprocess.DEVNULL)
     except Exception:
         pass
 
-def _show_popup(msg):
-    """Show a system notification popup."""
-    title = "Python Task Finished"
+def _show_popup(msg, success=True):
+    """Show a system notification popup with status indicators."""
+    icon = "✅" if success else "❌"
+    title = f"{icon} Python Task {'Finished' if success else 'Failed'}"
     try:
         if sys.platform == "win32":
-            # Use powershell for a native Windows toast notification without extra dependencies
-            ps_script = f'[reflection.assembly]::loadwithpartialname("System.Windows.Forms"); [reflection.assembly]::loadwithpartialname("System.Drawing"); $notify = new-object system.windows.forms.notifyicon; $notify.icon = [system.drawing.systemicons]::Information; $notify.visible = $true; $notify.showballoontip(10, "{title}", "{msg}", [system.windows.forms.tooltipicon]::None)'
+            # Use powershell for a native Windows toast notification
+            # We escape the message for PowerShell
+            safe_msg = msg.replace('"', '""')
+            ps_script = f'[reflection.assembly]::loadwithpartialname("System.Windows.Forms"); $notify = new-object system.windows.forms.notifyicon; $notify.icon = [system.drawing.systemicons]::Information; $notify.visible = $true; $notify.showballoontip(10, "{title}", "{safe_msg}", [system.windows.forms.tooltipicon]::None)'
             subprocess.run(["powershell", "-Command", ps_script], check=False)
         elif sys.platform == "darwin":
             # macOS native notification
@@ -49,15 +55,31 @@ def _show_popup(msg):
     except Exception:
         pass
 
+# Track if an exception has occurred
+_exception_occurred = False
+
+def _exception_handler(exctype, value, traceback):
+    global _exception_occurred
+    _exception_occurred = True
+    # Call the original excepthook
+    sys.__excepthook__(exctype, value, traceback)
+
+# Install the exception tracker
+sys.excepthook = _exception_handler
+
 def _ping_on_exit():
-    """Trigger the notification based on the selected mode."""
+    """Trigger the notification based on the selected mode and exit status."""
     # Check if disabled
     if _get_config("disable", "0") == "1":
         return
 
     elapsed = time.time() - _start_time
     threshold = _get_threshold()
-    mode = _get_config("mode", "popup").lower() # sound, popup (default)
+    mode = _get_config("mode", "popup").lower()
+    
+    # Check if the script is exiting due to an error
+    exc_type, exc_val, _ = sys.exc_info()
+    success = not _exception_occurred and (exc_type is None or (exc_type is SystemExit and exc_val.code == 0))
     
     # Validation logic
     is_script = bool(sys.argv and sys.argv[0] and not sys.argv[0].startswith('<'))
@@ -65,15 +87,18 @@ def _ping_on_exit():
     
     if elapsed > threshold and is_script and not is_ipython:
         script_name = os.path.basename(sys.argv[0])
-        msg = f"'{script_name}' finished in {elapsed:.1f}s"
+        status_text = "finished" if success else "FAILED"
+        msg = f"'{script_name}' {status_text} in {elapsed:.1f}s"
         
         if mode == "sound":
-            _play_sound()
-        else: # Default is popup (which usually includes sound)
-            _show_popup(msg)
+            _play_sound(success=success)
+        else: # Default is popup
+            _show_popup(msg, success=success)
             
         # Always print a clean message to console
-        print(f"\n[pynotify-auto] {msg}")
+        # Use text indicators for maximum compatibility with all terminals
+        prefix = "[SUCCESS]" if success else "[FAILED]"
+        print(f"\n{prefix} [pynotify-auto] {msg}")
 
 def install_hook():
     """Register the notification hook to run at exit."""
