@@ -58,21 +58,6 @@ Once installed, you can use the `pynotify-auto` command to test your settings:
 - `pynotify-auto --info`: View current mode and threshold settings.
 - `pynotify-auto --help`: Show all available commands.
 
-## How to Publish (Optional)
-
-To make this library available to others via `pip install pynotify-auto`:
-
-1.  **Create a PyPI Account**: Register at [pypi.org](https://pypi.org).
-2.  **Build the Package**:
-    ```bash
-    pip install build twine
-    python -m build
-    ```
-3.  **Upload to PyPI**:
-    ```bash
-    python -m twine upload dist/*
-    ```
-
 ## License
 
 MIT
