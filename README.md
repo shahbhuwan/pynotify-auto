@@ -17,13 +17,12 @@ Tired of checking your terminal every 5 minutes to see if your script finished? 
 
 ### Via Pip
 ```bash
-pip install .
+pip install pynotify-auto
 ```
 
 ### Via Conda
-(Once uploaded to a channel or built)
 ```bash
-conda install -c your-channel pynotify-auto
+conda install -c conda-forge pynotify-auto
 ```
 
 ## How it Works
