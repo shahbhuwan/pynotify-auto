@@ -25,5 +25,9 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Utilities",
     ],
-    python_requires='>=3.6',
+    entry_points={
+        "console_scripts": [
+            "pynotify-auto=pynotify_auto.cli:main",
+        ],
+    },
 )
