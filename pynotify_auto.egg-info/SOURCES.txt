@@ -1,9 +1,0 @@
-LICENSE
-README.md
-pynotify-auto.pth
-setup.py
-pynotify_auto/__init__.py
-pynotify_auto.egg-info/PKG-INFO
-pynotify_auto.egg-info/SOURCES.txt
-pynotify_auto.egg-info/dependency_links.txt
-pynotify_auto.egg-info/top_level.txt
