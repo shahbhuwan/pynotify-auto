@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="pynotify-auto",
-    version="0.2.6",
+    version="0.2.7",
     author="Bhuwan Shah",
     description="Zero-Code automatic notifications for long-running Python scripts.",
     long_description=long_description,
@@ -15,6 +15,13 @@ setup(
     url="https://github.com/shahbhuwan/pynotify-auto",
     packages=find_packages(),
     include_package_data=True,
+    license="MIT",
+    keywords="notification, automation, development, utility, alerts",
+    python_requires=">=3.8",
+    project_urls={
+        "Bug Tracker": "https://github.com/shahbhuwan/pynotify-auto/issues",
+        "Source Code": "https://github.com/shahbhuwan/pynotify-auto",
+    },
     # This ensures the .pth file is placed in the correct site-packages
     # On Windows, this is 'Lib/site-packages'. On others, it's relative to site-packages.
     data_files=[
