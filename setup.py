@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="pynotify-auto",
-    version="0.2.0",
+    version="0.2.1",
     author="Bhuwan Shah",
     description="Zero-Code automatic notifications for long-running Python scripts.",
     long_description=long_description,
@@ -15,9 +15,9 @@ setup(
     url="https://github.com/shahbhuwan/pynotify-auto",
     packages=find_packages(),
     include_package_data=True,
-    # This puts the .pth file directly into site-packages
+    # This ensures the .pth file is placed in site-packages
     # which is required for it to be executed at Python startup.
-    data_files=[('', ['pynotify-auto.pth'])],
+    data_files=[('site-packages', ['pynotify-auto.pth'])],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
