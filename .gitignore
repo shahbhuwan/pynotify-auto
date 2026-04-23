@@ -146,3 +146,8 @@ cython_debug/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local scratch/test scripts
+test_failure.py
+test_success.py
+test_long.py
