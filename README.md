@@ -30,6 +30,11 @@ Traditional notification libraries require you to manually add decorators or ext
 pip install pynotify-auto
 ```
 
+> [!TIP]
+> **Conda & Virtual Environments**: Always install this library while your environment is **active**. If you find that notifications aren't working, run:
+> `pip install pynotify-auto --no-user --force-reinstall`
+> This ensures the hook is installed inside your isolated environment.
+
 ## Examples
 
 ### Using Environment Variables
