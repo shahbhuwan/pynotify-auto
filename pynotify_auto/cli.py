@@ -41,7 +41,7 @@ def main():
             target = os.path.join(target_dir, "pynotify-auto.pth")
             print(f"Installing universal hook to: {target}")
             with open(target, "w") as f:
-                f.write('import sys; exec("try:\\n    import pynotify_auto\\n    pynotify_auto.install_hook()\\nexcept:\\n    pass")\\n')
+                f.write('import sys; exec("try:\\n    import pynotify_auto\\n    pynotify_auto.install_hook()\\nexcept:\\n    pass")')
             print("Successfully installed universal hook! It will now work in ALL environments.")
         except Exception as e:
             print(f"Error installing hook: {e}")
