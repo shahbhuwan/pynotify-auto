@@ -16,11 +16,35 @@ def main():
     parser.add_argument(
         "--version", action="store_true", help="Show the version of pynotify-auto."
     )
+    parser.add_argument(
+        "--fix-conda", action="store_true", help="Manually fix auto-start hook for Conda/Isolated envs."
+    )
     
     args = parser.parse_args()
 
     if args.version:
-        print("pynotify-auto version 0.1.0")
+        from importlib.metadata import version
+        try:
+            print(f"pynotify-auto version {version('pynotify-auto')}")
+        except:
+            print("pynotify-auto version 0.2.3")
+        return
+
+    if args.fix_conda:
+        import site
+        # Get the User Site-Packages (always accessible and usually checked by Conda)
+        try:
+            target_dir = site.getusersitepackages()
+            if not os.path.exists(target_dir):
+                os.makedirs(target_dir, exist_ok=True)
+                
+            target = os.path.join(target_dir, "pynotify-auto.pth")
+            print(f"Installing universal hook to: {target}")
+            with open(target, "w") as f:
+                f.write('import sys; exec("try:\\n    import pynotify_auto\\n    pynotify_auto.install_hook()\\nexcept:\\n    pass")\\n')
+            print("Successfully installed universal hook! It will now work in ALL environments.")
+        except Exception as e:
+            print(f"Error installing hook: {e}")
         return
 
     if args.info:
