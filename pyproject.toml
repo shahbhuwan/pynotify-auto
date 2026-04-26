@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynotify-auto"
-version = "0.2.7"
+version = "0.3.0"
 authors = [
   { name="Bhuwan Shah" },
 ]
@@ -35,7 +35,5 @@ packages = ["pynotify_auto"]
 include-package-data = true
 
 [tool.setuptools.data-files]
-# This is where we try to place the .pth file. 
-# Note: For many modern tools, .pth files are handled best via setup.py 
-# if dynamic paths are needed.
+# Include the .pth file in the root of site-packages
 "." = ["pynotify-auto.pth"]

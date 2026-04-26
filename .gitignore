@@ -151,3 +151,9 @@ Thumbs.db
 test_failure.py
 test_success.py
 test_long.py
+_test_hook_check.py
+_test_mp_temp.py
+
+# Environments
+.test_env/
+

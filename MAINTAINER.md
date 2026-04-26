@@ -27,7 +27,7 @@ I have set up a GitHub Action (`.github/workflows/publish.yml`) that automates t
 
 ### How to trigger an update:
 Whenever you want to release a new version online:
-1.  **Update the version** in `setup.py` (e.g., change `0.1.0` to `0.1.1`).
+1.  **Update the version** in `pyproject.toml` (e.g., change `0.3.0` to `0.3.1`).
 2.  **Commit and push** the change.
 3.  **Create a tag** and push it:
     ```bash
