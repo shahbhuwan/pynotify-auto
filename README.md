@@ -67,3 +67,14 @@ pynotify-auto --info
 ## License
 
 MIT
+
+## Contributing
+
+`pynotify-auto` is an open-source project and I welcome contributions! Whether it's fixing bugs, adding new notification backends (like Slack or Discord), or improving documentation, feel free to:
+
+1. **Fork** the repository.
+2. **Create a branch** for your feature or fix.
+3. **Open a Pull Request** with a description of your changes.
+
+Check out the [comprehensive test suite](tests/test_comprehensive.py) to see how to run tests locally. Let's make Python development a bit more pleasant for everyone!
+
