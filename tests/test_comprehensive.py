@@ -19,12 +19,10 @@ import subprocess
 import importlib
 import textwrap
 
-# We use the test env's python
-PYTHON = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    ".test_env", "Scripts", "python.exe"
-)
+# Use the current interpreter for subprocess tests
+PYTHON = sys.executable
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 class TestPublicAPI(unittest.TestCase):
