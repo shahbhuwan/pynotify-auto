@@ -70,11 +70,8 @@ MIT
 
 ## Contributing
 
-`pynotify-auto` is an open-source project and I welcome contributions! Whether it's fixing bugs, adding new notification backends (like Slack or Discord), or improving documentation, feel free to:
+I'm open to contributions! Feel free to fork the repo and open a PR if you have bug fixes or new notification backends (Slack, Discord, etc.) you'd like to add.
 
-1. **Fork** the repository.
-2. **Create a branch** for your feature or fix.
-3. **Open a Pull Request** with a description of your changes.
+Check the [comprehensive test suite](tests/test_comprehensive.py) for examples on how to run tests locally.
 
-Check out the [comprehensive test suite](tests/test_comprehensive.py) to see how to run tests locally. Let's make Python development a bit more pleasant for everyone!
 
