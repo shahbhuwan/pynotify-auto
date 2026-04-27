@@ -11,7 +11,7 @@ import sys
 import os
 import subprocess
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 def get_config(key, default):
     """Read PYNOTIFY_* environment variables."""
