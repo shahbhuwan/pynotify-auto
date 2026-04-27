@@ -157,3 +157,6 @@ _test_mp_temp.py
 # Environments
 .test_env/
 
+
+# Internal maintainer guide
+MAINTAINER.md
