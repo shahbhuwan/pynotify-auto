@@ -59,7 +59,7 @@ def show_popup(msg, success=True):
             $notify.icon = [system.drawing.systemicons]::Information
             $notify.visible = $true
             $notify.showballoontip(5000, "{title}", "{safe_msg}", [system.windows.forms.tooltipicon]::Info)
-            start-sleep -s 1
+            start-sleep -s 2
             """
             subprocess.run(
                 ["powershell", "-Command", ps_script],

@@ -30,10 +30,12 @@ Traditional notification libraries require you to manually add decorators or ext
 pip install pynotify-auto
 ```
 
-> [!TIP]
-> **Conda & Virtual Environments**: Always install this library while your environment is **active**. If you find that notifications aren't working, run:
-> `pip install pynotify-auto --no-user --force-reinstall`
-> This ensures the hook is installed inside your isolated environment.
+> [!IMPORTANT]
+> **Activation Step**: Due to how modern Python environments (Conda, venv) handle installation, you may need to manually enable the zero-code hook once after installation:
+> ```bash
+> pynotify-auto --enable
+> ```
+> This ensures that `pynotify-auto` can monitor your scripts automatically. You can check the status at any time with `pynotify-auto --info`.
 
 ## Examples
 
