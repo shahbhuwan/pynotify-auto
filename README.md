@@ -1,13 +1,24 @@
 # pynotify-auto
 
+![pynotify-auto Banner](pynotify_social_preview.png)
+
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
+[![GitHub stars](https://img.shields.io/github/stars/shahbhuwan/pynotify-auto.svg)](https://github.com/shahbhuwan/pynotify-auto/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/shahbhuwan/pynotify-auto.svg)](https://github.com/shahbhuwan/pynotify-auto/network)
 [![Build Status](https://github.com/shahbhuwan/pynotify-auto/workflows/CI/badge.svg)](https://github.com/shahbhuwan/pynotify-auto/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 
 **Zero-Code automatic notifications for any long-running Python script.**
 
-Stop babysitting your terminal. Whether you're training models, processing datasets, or running complex simulations, `pynotify-auto` pings you the moment your task is done—so you can focus on what matters.
+> [!TIP]
+> **Stop babysitting your terminal.** Whether you're training models, processing datasets, or running complex simulations, `pynotify-auto` pings you the moment your task is done—so you can focus on what matters.
+
+## 🚀 Quick Demo
+
+![Demo Placeholder](demo.gif)
+*(Coming soon: An interactive demo of pynotify-auto in action!)*
 
 ## Why use this?
 Traditional notification libraries require you to manually add decorators or extra lines of code to every script. `pynotify-auto` is different: **it works automatically for every script in your environment.** 
@@ -65,6 +76,17 @@ pynotify-auto --test
 # Show your current settings (Mode, Threshold, Status)
 pynotify-auto --info
 ```
+
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=shahbhuwan/pynotify-auto&type=Date)](https://star-history.com/#shahbhuwan/pynotify-auto&Date)
+
+## 🤝 Used By
+
+Are you using `pynotify-auto` in your project? Let us know by opening a PR or an issue!
+
+- [Example Project](https://github.com/example/project) - A brief description of how they use it.
 
 ## License
 
