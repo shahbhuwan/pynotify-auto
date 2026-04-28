@@ -1,6 +1,6 @@
 # pynotify-auto
 
-![pynotify-auto Banner](pynotify_social_preview.png)
+![pynotify-auto Banner](pynotify_banner_accurate.png)
 
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
