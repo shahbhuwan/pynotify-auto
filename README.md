@@ -1,6 +1,6 @@
 # pynotify-auto
 
-![pynotify-auto Banner](pynotify_banner_accurate.png)
+![pynotify-auto Banner](pynotify_banner.png)
 
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
@@ -84,9 +84,8 @@ pynotify-auto --info
 
 ## 🤝 Used By
 
-Are you using `pynotify-auto` in your project? Let us know by opening a PR or an issue!
-
-- [Example Project](https://github.com/example/project) - A brief description of how they use it.
+Are you using `pynotify-auto` in your project? We'd love to feature you here! 
+Open a PR to add your project to the list.
 
 ## License
 
