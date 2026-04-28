@@ -78,10 +78,6 @@ pynotify-auto --info
 ```
 
 
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=shahbhuwan/pynotify-auto&type=Date)](https://star-history.com/#shahbhuwan/pynotify-auto&Date)
-
 ## 🤝 Used By
 
 Are you using `pynotify-auto` in your project? We'd love to feature you here! 
