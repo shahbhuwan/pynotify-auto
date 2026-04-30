@@ -27,8 +27,11 @@ def get_config(key, default=None):
     return _config.get(key, default)
 
 def get_threshold():
-    """Helper to get the current notification threshold."""
-    return float(get_config("threshold", 5.0))
+    """Helper to get the current notification threshold. Safely falls back to 5.0."""
+    try:
+        return float(get_config("threshold", 5.0))
+    except (ValueError, TypeError):
+        return 5.0
 
 
 # ---------------------------------------------------------------------------
@@ -194,7 +197,7 @@ def _ping_on_exit():
         return
 
     elapsed = time.time() - _start_time
-    threshold = get_config("threshold", 5.0)
+    threshold = get_threshold()
     mode = str(get_config("mode", "popup")).lower()
 
     success = not _detect_failure()
