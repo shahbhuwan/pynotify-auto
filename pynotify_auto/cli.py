@@ -1,7 +1,7 @@
 import sys
 import argparse
 import os
-from pynotify_auto import show_popup, play_sound, get_config
+from pynotify_auto import show_popup, play_sound, get_config, hook_active, send_remote_notification, __version__
 
 def main():
     parser = argparse.ArgumentParser(
@@ -18,13 +18,11 @@ def main():
 
 
     if args.version:
-        from pynotify_auto import __version__
         print(f"pynotify-auto version {__version__}")
         return
 
     if args.enable:
         import site
-        from pynotify_auto import hook_active
         if hook_active:
             print("Hook is already active!")
             return
@@ -50,7 +48,6 @@ def main():
         return
 
     if args.info:
-        from pynotify_auto import hook_active, get_config
         mode = get_config("mode", "popup")
         threshold = get_config("threshold", 5.0)
         disabled = str(get_config("disable", "0")) == "1"
@@ -71,7 +68,6 @@ def main():
 
     if args.config:
         import json
-        from pynotify_auto import get_config
         home = os.path.expanduser("~")
         config_path = os.path.join(home, ".pynotify.json")
         
@@ -140,7 +136,6 @@ def main():
         return
 
     if args.test:
-        from pynotify_auto import send_remote_notification
         mode = get_config("mode", "popup")
         msg = "Test notification from pynotify-auto!"
         
