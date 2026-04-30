@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.4.0 rewrite.
+Comprehensive test suite for pynotify-auto v0.4.2 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.4.0")
+        self.assertEqual(pynotify_auto.__version__, "0.4.2")
 
 
 class TestConfig(unittest.TestCase):
@@ -331,7 +331,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.4.0", r.stdout)
+        self.assertIn("0.4.2", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
