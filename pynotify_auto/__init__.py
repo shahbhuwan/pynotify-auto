@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.4.3"
+__version__ = "0.4.5"
 
 _config = cfg_module.load_config()
 
