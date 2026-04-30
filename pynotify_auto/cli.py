@@ -28,7 +28,19 @@ def main():
             return
 
         try:
-            target_dir = site.getusersitepackages()
+            # Determine the best target directory
+            # Prefer environment site-packages over global user site-packages
+            if hasattr(site, 'getsitepackages'):
+                # getsitepackages() is not available on some platforms/versions
+                possible_targets = site.getsitepackages()
+                # Filter for directories we can actually write to
+                target_dir = next((d for d in possible_targets if "site-packages" in d and os.access(d, os.W_OK)), None)
+            else:
+                target_dir = None
+
+            if not target_dir:
+                target_dir = site.getusersitepackages()
+                
             if not os.path.exists(target_dir):
                 os.makedirs(target_dir, exist_ok=True)
                 
@@ -39,6 +51,9 @@ def main():
             print("Successfully enabled zero-code notifications!")
         except Exception as e:
             print(f"Error enabling hook: {e}")
+            if "Permission denied" in str(e):
+                print("\nTIP: If you are using a global Python, you might need to run this as Administrator.")
+                print("     If you are using a Conda/Venv, ensure you have write access to its folder.")
         return
 
     if args.info:
