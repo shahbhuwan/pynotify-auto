@@ -235,6 +235,7 @@ def _ping_on_exit():
 
         prefix = "[SUCCESS]" if success else "[FAILED]"
         print(f"\n{prefix} [pynotify-auto] {msg}")
+        sys.stdout.flush()
 
 
 # ---------------------------------------------------------------------------
@@ -252,6 +253,15 @@ def install_hook():
     if _hook_registered:
         return
 
+    # 🛑 MULTIPROCESSING SUPPRESSION
+    # On Windows, workers start with '-c' and '--multiprocessing-fork' or 'spawn_main'
+    if len(sys.argv) > 1 and sys.argv[0] == "-c":
+        arg_str = " ".join(sys.argv)
+        if "multiprocessing" in arg_str or "spawn_main" in arg_str or "ipykernel" in arg_str:
+            return
+    if sys.argv == ["-c"]:
+        return
+
     # Skip if disabled or in inappropriate environments
     if get_config("disable") == "1" or get_config("disable") is True:
         return
@@ -259,13 +269,6 @@ def install_hook():
     is_script = bool(sys.argv and sys.argv[0] and not sys.argv[0].startswith("<"))
     is_ipython = "IPython" in sys.modules or "ipykernel" in sys.modules
     
-    try:
-        import multiprocessing
-        if multiprocessing.current_process().name != "MainProcess":
-            return
-    except Exception:
-        pass
-
     if not is_script or is_ipython:
         return
 
