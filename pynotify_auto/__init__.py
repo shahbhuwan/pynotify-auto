@@ -20,8 +20,15 @@ __version__ = "0.4.0"
 _config = cfg_module.load_config()
 
 def get_config(key, default=None):
-    """Read config with fallback."""
+    """Read config with fallback. Checks environment variables dynamically."""
+    env_val = os.environ.get(f"PYNOTIFY_{key.upper()}")
+    if env_val is not None:
+        return env_val
     return _config.get(key, default)
+
+def get_threshold():
+    """Helper to get the current notification threshold."""
+    return float(get_config("threshold", 5.0))
 
 
 # ---------------------------------------------------------------------------
