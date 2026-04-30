@@ -1,6 +1,8 @@
 # pynotify-auto
 
-![pynotify-auto Banner](banner_pynotify.png)
+# **Smart, effortless notifications for your Python scripts.**
+
+Stay informed on your desktop or your phone, without changing a single line of code.
 
 ---
 
@@ -10,14 +12,8 @@
 
 [![Documentation](https://img.shields.io/badge/docs-view-brightgreen)](https://shahbhuwan.github.io/pynotify-auto/)
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
-[![GitHub stars](https://img.shields.io/github/stars/shahbhuwan/pynotify-auto.svg)](https://github.com/shahbhuwan/pynotify-auto/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/shahbhuwan/pynotify-auto.svg)](https://github.com/shahbhuwan/pynotify-auto/network)
-[![Build Status](https://github.com/shahbhuwan/pynotify-auto/workflows/CI/badge.svg)](https://github.com/shahbhuwan/pynotify-auto/actions)
+[![Supported OS](https://img.shields.io/badge/os-Windows%20|%20macOS%20|%20Linux-blue)](https://github.com/shahbhuwan/pynotify-auto)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Versions](https://img.shields.io/pypi/pyversions/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
-
-**Smart, effortless notifications for your Python scripts.**
 
 Stay informed on your desktop or your phone, without changing a single line of code.
 
