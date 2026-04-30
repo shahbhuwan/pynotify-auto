@@ -253,6 +253,14 @@ def install_hook():
     if _hook_registered:
         return
 
+    # 🛑 NESTED SUPPRESSION
+    # If a parent process is already handling notifications, the child should stay silent.
+    if os.environ.get("PYNOTIFY_ACTIVE_PID"):
+        return
+    
+    # Mark this PID as the active notifier for all children
+    os.environ["PYNOTIFY_ACTIVE_PID"] = str(os.getpid())
+
     # 🛑 MULTIPROCESSING SUPPRESSION
     # On Windows, workers start with '-c' and '--multiprocessing-fork' or 'spawn_main'
     if len(sys.argv) > 1 and sys.argv[0] == "-c":
