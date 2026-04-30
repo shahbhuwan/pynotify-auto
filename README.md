@@ -2,6 +2,12 @@
 
 ![pynotify-auto Banner](banner_pynotify.png)
 
+---
+
+### 🌐 [**VIEW LIVE DOCUMENTATION & SETUP GUIDE**](https://shahbhuwan.github.io/pynotify-auto/)
+
+---
+
 [![Documentation](https://img.shields.io/badge/docs-view-brightgreen)](https://shahbhuwan.github.io/pynotify-auto/)
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
@@ -11,22 +17,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 
-**Zero-Code automatic notifications for any long-running Python script.**
+**Smart, effortless notifications for your Python scripts.**
 
-> [!TIP]
-> **Stop babysitting your terminal.** Whether you're training models, processing datasets, or running complex simulations, `pynotify-auto` pings you the moment your task is done—so you can focus on what matters.
-
-## 🚀 Quick Demo
-
-![Demo Placeholder](demo.gif)
-*(Coming soon: An interactive demo of pynotify-auto in action!)*
+Stay informed on your desktop or your phone, without changing a single line of code.
 
 ## Why use this?
 Traditional notification libraries require you to manually add decorators or extra lines of code to every script. `pynotify-auto` is different: **it works automatically for every script in your environment.** 
 
-- **No Code Changes**: Install once, and it works for all your scripts.
+- **Desktop + Mobile**: Get native popups on your computer and real-time snapshots on your phone (Ntfy/Telegram).
+- **Cross-Platform**: Full support for Windows (Toast), macOS (Notification Center), and Linux (Libnotify).
+- **Zero-Code Integration**: Install once, and it works for all your scripts globally.
 - **Smart Filtering**: It stays quiet for quick tasks and only alerts you for the ones that actually take time.
-- **Immediate Feedback**: Know exactly when your process finishes or fails, even if you're in another room.
 
 ## Features
 

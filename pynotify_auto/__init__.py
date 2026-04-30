@@ -30,6 +30,8 @@ def get_config(key, default=None):
 
 def play_sound(success=True):
     """Play a system chime based on exit status."""
+    if os.environ.get("GITHUB_ACTIONS"):
+        return
     try:
         if sys.platform == "win32":
             import winsound
@@ -46,6 +48,8 @@ def play_sound(success=True):
 
 def show_popup(msg, success=True):
     """Trigger a native system notification popup."""
+    if os.environ.get("GITHUB_ACTIONS"):
+        return
     icon = "✅" if success else "❌"
     title = f"{icon} Python Task {'Finished' if success else 'Failed'}"
     try:

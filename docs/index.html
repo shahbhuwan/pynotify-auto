@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pynotify-auto | Run Code, Reclaim Time</title>
+    <title>pynotify-auto | Smart Python Notifications</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -66,21 +66,38 @@
         }
 
         h1 {
-            font-size: 5rem;
+            font-size: 4.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
             letter-spacing: -3px;
+            line-height: 1.1;
         }
 
         .tagline {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #94a3b8;
-            max-width: 650px;
+            max-width: 750px;
             margin-bottom: 3rem;
             font-weight: 300;
+        }
+
+        .os-badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            opacity: 0.7;
+        }
+
+        .os-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
         }
 
         .cta-group {
@@ -113,11 +130,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             background: rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
         }
 
         /* Features */
@@ -283,32 +295,39 @@
     <div class="container">
         <section class="hero">
             <div class="logo-symbol">N</div>
-            <h1>Leave Your Desk.<br>Track Your Code.</h1>
-            <p class="tagline">Automatic mobile notifications and live terminal snapshots for any Python script. No code changes required.</p>
+            <h1>Smart Notifications for<br>Your Python Scripts.</h1>
+            <p class="tagline">Stay informed on your desktop or your phone. Effortless monitoring for any script, without changing a single line of code.</p>
+            
+            <div class="os-badges">
+                <span class="os-badge">Windows</span>
+                <span class="os-badge">macOS</span>
+                <span class="os-badge">Linux</span>
+            </div>
+
             <div class="cta-group">
-                <a href="#setup" class="btn btn-primary">Start Now</a>
-                <a href="https://github.com/shahbhuwan/pynotify-auto" class="btn btn-outline">GitHub Repo</a>
+                <a href="#setup" class="btn btn-primary">Quick Start</a>
+                <a href="https://github.com/shahbhuwan/pynotify-auto" class="btn btn-outline">GitHub</a>
             </div>
         </section>
 
         <section class="features">
             <div class="card">
-                <h3>Zero-Code Integration</h3>
-                <p>No <code>import</code> statements. No manual hooks. Just enable once and every long-running script notifies you automatically.</p>
+                <h3>Native Desktop Popups</h3>
+                <p>Get instant alerts on your PC/Mac. Supports Windows Toast, macOS Notification Center, and Linux Libnotify automatically.</p>
             </div>
             <div class="card">
-                <h3>Live Progress Alerts</h3>
-                <p>Receive periodic "Recent Output" snapshots on your phone. See exactly what your script is doing while you're away.</p>
+                <h3>Live Phone Snapshots</h3>
+                <p>Receive periodic "Recent Output" snapshots on your mobile via Ntfy or Telegram. See logs without being at your desk.</p>
             </div>
             <div class="card">
-                <h3>Built for Multi-Taskers</h3>
-                <p>Perfect for long-running simulations, model training, or data processing tasks that keep you tied to your terminal.</p>
+                <h3>True Zero-Code</h3>
+                <p>Works globally across your environment. No <code>import</code> statements or decorators needed to start monitoring.</p>
             </div>
         </section>
 
         <section class="setup" id="setup">
             <h2 style="text-align: center; font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">Quick Setup Guide</h2>
-            <p style="text-align: center; color: #94a3b8; margin-bottom: 4rem; font-size: 1.2rem;">Run these commands in your terminal</p>
+            <p style="text-align: center; color: #94a3b8; margin-bottom: 4rem; font-size: 1.2rem;">Run these commands to get started</p>
             
             <div class="code-container">
                 <button class="copy-btn" onclick="copyToClipboard('pip install pynotify-auto\npynotify-auto --enable')">COPY</button>
@@ -328,7 +347,7 @@ pynotify-auto --enable</code>
                     <li>
                         <div class="step-content">
                             <b>Download App</b>
-                            <p>Get the <b>Ntfy</b> app on your phone and subscribe to a unique topic (e.g., <code>bshah_test</code>).</p>
+                            <p>Get the <b>Ntfy</b> app on your phone and subscribe to a unique topic (e.g., <code>my_secret_topic</code>).</p>
                         </div>
                     </li>
                     <li>
