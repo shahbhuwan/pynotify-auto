@@ -2,7 +2,7 @@
 
 # **Smart, effortless notifications for your Python scripts.**
 
-Stay informed on your desktop or your phone, without changing a single line of code.
+## **Stay informed on your desktop or your phone, without changing a single line of code.**
 
 ---
 
