@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.4.5"
+__version__ = "0.4.7"
 
 _config = cfg_module.load_config()
 
@@ -65,14 +65,15 @@ def show_popup(msg, success=True):
     try:
         if sys.platform == "win32":
             safe_msg = msg.replace('"', '""')
-            ps_script = f"""
-            [reflection.assembly]::loadwithpartialname("System.Windows.Forms")
-            $notify = new-object system.windows.forms.notifyicon
-            $notify.icon = [system.drawing.systemicons]::Information
-            $notify.visible = $true
-            $notify.showballoontip(5000, "{title}", "{safe_msg}", [system.windows.forms.tooltipicon]::Info)
-            start-sleep -s 2
-            """
+            # Use the proven NotifyIcon method for maximum compatibility
+            ps_script = (
+                f"Add-Type -AssemblyName System.Windows.Forms; "
+                f"$t = New-Object System.Windows.Forms.NotifyIcon; "
+                f"$t.Icon = [System.Drawing.SystemIcons]::Information; "
+                f"$t.Visible = $true; "
+                f'$t.ShowBalloonTip(5000, "{title}", "{safe_msg}", [System.Windows.Forms.ToolTipIcon]::Info); '
+                f"Start-Sleep 5"
+            )
             # Use Popen to make it non-blocking
             subprocess.Popen(
                 ["powershell", "-Command", ps_script],
