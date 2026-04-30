@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.4.2 rewrite.
+Comprehensive test suite for pynotify-auto v0.4.3 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.4.2")
+        self.assertEqual(pynotify_auto.__version__, "0.4.3")
 
 
 class TestConfig(unittest.TestCase):
@@ -72,7 +72,13 @@ class TestConfig(unittest.TestCase):
     def test_get_threshold_default(self):
         from pynotify_auto import get_threshold
         os.environ.pop("PYNOTIFY_THRESHOLD", None)
-        self.assertEqual(get_threshold(), 5.0)
+        import pynotify_auto
+        old_config = pynotify_auto._config
+        pynotify_auto._config = {}
+        try:
+            self.assertEqual(get_threshold(), 5.0)
+        finally:
+            pynotify_auto._config = old_config
 
     def test_get_threshold_custom(self):
         from pynotify_auto import get_threshold
@@ -205,6 +211,7 @@ class TestSubprocess(unittest.TestCase):
         """Run a Python snippet in a subprocess and capture output."""
         env = os.environ.copy()
         env["PYNOTIFY_THRESHOLD"] = "1"  # Low threshold for fast tests
+        env["PYNOTIFY_REMOTE_BACKEND"] = "" # Disable heartbeat noise
         if env_overrides:
             env.update(env_overrides)
 
@@ -331,7 +338,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.4.2", r.stdout)
+        self.assertIn("0.4.3", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
@@ -382,6 +389,7 @@ class TestMultiprocessing(unittest.TestCase):
             env = os.environ.copy()
             env["PYNOTIFY_THRESHOLD"] = "1"
             env["PYNOTIFY_MODE"] = "sound"  # Avoid popups during tests
+            env["PYNOTIFY_REMOTE_BACKEND"] = "" # Disable heartbeat noise
 
             r = subprocess.run(
                 [PYTHON, script_path],
@@ -391,7 +399,7 @@ class TestMultiprocessing(unittest.TestCase):
             # Should see exactly ONE notification line (from main process)
             notify_lines = [
                 line for line in r.stdout.splitlines()
-                if "pynotify-auto" in line
+                if "pynotify-auto" in line and "Remote updates active" not in line
             ]
             self.assertEqual(
                 len(notify_lines), 1,

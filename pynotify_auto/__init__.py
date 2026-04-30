@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 
 _config = cfg_module.load_config()
 
@@ -249,6 +249,23 @@ def install_hook():
     global _hook_registered, hook_active, _start_time, _exit_code, _interceptor
 
     if _hook_registered:
+        return
+
+    # Skip if disabled or in inappropriate environments
+    if get_config("disable") == "1" or get_config("disable") is True:
+        return
+
+    is_script = bool(sys.argv and sys.argv[0] and not sys.argv[0].startswith("<"))
+    is_ipython = "IPython" in sys.modules or "ipykernel" in sys.modules
+    
+    try:
+        import multiprocessing
+        if multiprocessing.current_process().name != "MainProcess":
+            return
+    except Exception:
+        pass
+
+    if not is_script or is_ipython:
         return
 
     _hook_registered = True
