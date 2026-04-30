@@ -49,16 +49,11 @@ pip install pynotify-auto
 > ```
 > This ensures that `pynotify-auto` can monitor your scripts automatically. You can check the status at any time with `pynotify-auto --info`.
 
-## 📱 Remote Notifications (Ntfy & Telegram)
-
-`pynotify-auto` can send notifications directly to your phone, allowing you to truly leave your workspace while your scripts are running. It can even send periodic **Progress Updates** with the latest lines of your logs!
-
-### 1. Ntfy.sh (Recommended)
 ## 📱 Remote Notifications (Phone/Mobile)
 
 `pynotify-auto` can track your script's progress and send real-time updates to your phone. It supports **Ntfy.sh** and **Telegram**.
 
-### 1-Second Setup
+### Interactive Configuration
 The easiest way to configure remote alerts is using the built-in wizard:
 ```bash
 pynotify-auto --config
@@ -84,7 +79,7 @@ This interactive guide will help you choose your service and enter your credenti
 
 ### ⏳ Real-Time Progress Tracking
 Once enabled, `pynotify-auto` will automatically:
-- **Ping your phone** every 30 minutes (configurable) with the **last 10 lines of logs**.
+- **Ping your phone** every 30 minutes (configurable) with a snapshot of your logs.
 - Notify you immediately if the script **crashes** with the error traceback.
 - Notify you when the script **finishes** successfully.
 
@@ -100,10 +95,11 @@ All settings are stored in `~/.pynotify.json`. You can also override them using 
 | **Progress Interval** | `progress_interval_minutes` | `PYNOTIFY_PROGRESS_INTERVAL` | `30` (min) |
 | **Log History** | `log_lines` | `PYNOTIFY_LOG_LINES` | `10` |
 | **Backend** | `remote_backend` | `PYNOTIFY_REMOTE_BACKEND` | `None` |
-| **Ntfy Topic** | `ntfy_topic` | `PYNOTIFY_NTFY_TOPIC` | `None` |
+| **Ntfy Topic** | `ntfy_topic` | `PYNOTIFY_NTFY_TOPIC" | `None` |
 | **Telegram Token** | `telegram_bot_token` | `PYNOTIFY_TELEGRAM_TOKEN` | `None` |
 | **Telegram Chat ID** | `telegram_chat_id` | `PYNOTIFY_TELEGRAM_CHAT_ID` | `None` |
-omatically intercepts your script's output (`stdout` and `stderr`). It captures `print()` statements, standard `logging`, and even crash tracebacks without requiring any changes to your code.
+
+The "Zero-Code" progress tracker automatically intercepts your script's output (`stdout` and `stderr`). It captures `print()` statements, standard `logging`, and even crash tracebacks without requiring any changes to your code.
 
 
 ## 🤝 Used By
