@@ -13,6 +13,7 @@
 [![Documentation](https://img.shields.io/badge/docs-view-brightgreen)](https://shahbhuwan.github.io/pynotify-auto/)
 [![PyPI version](https://img.shields.io/pypi/v/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 [![Supported OS](https://img.shields.io/badge/os-Windows%20|%20macOS%20|%20Linux-blue)](https://github.com/shahbhuwan/pynotify-auto)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pynotify-auto.svg)](https://pypi.org/project/pynotify-auto/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Stay informed on your desktop or your phone, without changing a single line of code.
