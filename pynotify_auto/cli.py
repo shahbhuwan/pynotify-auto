@@ -35,13 +35,7 @@ def main():
             target = os.path.join(target_dir, "pynotify-auto.pth")
             print(f"Installing universal hook to: {target}")
             with open(target, "w") as f:
-                f.write(
-                    'import sys; exec("try:\\n'
-                    '    import pynotify_auto\\n'
-                    '    pynotify_auto.install_hook()\\n'
-                    'except Exception:\\n'
-                    '    pass")\\n'
-                )
+                f.write('import sys; exec("try:\\n    import pynotify_auto; pynotify_auto.install_hook()\\nexcept Exception: pass")\n')
             print("Successfully enabled zero-code notifications!")
         except Exception as e:
             print(f"Error enabling hook: {e}")
