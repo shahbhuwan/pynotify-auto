@@ -267,8 +267,6 @@ def install_hook():
         arg_str = " ".join(sys.argv)
         if "multiprocessing" in arg_str or "spawn_main" in arg_str or "ipykernel" in arg_str:
             return
-    if sys.argv == ["-c"]:
-        return
 
     # Skip if disabled or in inappropriate environments
     if get_config("disable") == "1" or get_config("disable") is True:
