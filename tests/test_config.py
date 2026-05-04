@@ -19,7 +19,13 @@ class TestPyNotifyConfig(unittest.TestCase):
         # Default threshold should be 5.0
         if "PYNOTIFY_THRESHOLD" in os.environ:
             del os.environ["PYNOTIFY_THRESHOLD"]
-        self.assertEqual(get_threshold(), 5.0)
+        import pynotify_auto
+        old_config = pynotify_auto._config
+        pynotify_auto._config = {}
+        try:
+            self.assertEqual(get_threshold(), 5.0)
+        finally:
+            pynotify_auto._config = old_config
 
     def test_get_threshold_custom(self):
         os.environ["PYNOTIFY_THRESHOLD"] = "10.5"
@@ -29,8 +35,14 @@ class TestPyNotifyConfig(unittest.TestCase):
     def test_get_threshold_invalid(self):
         # Should fallback to default on invalid input
         os.environ["PYNOTIFY_THRESHOLD"] = "invalid"
-        self.assertEqual(get_threshold(), 5.0)
-        del os.environ["PYNOTIFY_THRESHOLD"]
+        import pynotify_auto
+        old_config = pynotify_auto._config
+        pynotify_auto._config = {}
+        try:
+            self.assertEqual(get_threshold(), 5.0)
+        finally:
+            pynotify_auto._config = old_config
+            del os.environ["PYNOTIFY_THRESHOLD"]
 
 if __name__ == "__main__":
     unittest.main()

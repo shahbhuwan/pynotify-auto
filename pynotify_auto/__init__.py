@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 _config = cfg_module.load_config()
 
@@ -255,7 +255,8 @@ def install_hook():
 
     # 🛑 NESTED SUPPRESSION
     # If a parent process is already handling notifications, the child should stay silent.
-    if os.environ.get("PYNOTIFY_ACTIVE_PID"):
+    active_pid = os.environ.get("PYNOTIFY_ACTIVE_PID")
+    if active_pid and active_pid != str(os.getpid()):
         return
     
     # Mark this PID as the active notifier for all children

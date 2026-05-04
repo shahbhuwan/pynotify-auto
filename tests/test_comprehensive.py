@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.5.1 rewrite.
+Comprehensive test suite for pynotify-auto v0.5.2 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.5.1")
+        self.assertEqual(pynotify_auto.__version__, "0.5.2")
 
 
 class TestConfig(unittest.TestCase):
@@ -212,6 +212,7 @@ class TestSubprocess(unittest.TestCase):
         env = os.environ.copy()
         env["PYNOTIFY_THRESHOLD"] = "1"  # Low threshold for fast tests
         env["PYNOTIFY_REMOTE_BACKEND"] = "" # Disable heartbeat noise
+        env.pop("PYNOTIFY_ACTIVE_PID", None) # Allow subprocess to notify
         if env_overrides:
             env.update(env_overrides)
 
@@ -338,7 +339,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.5.1", r.stdout)
+        self.assertIn("0.5.2", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
@@ -390,6 +391,7 @@ class TestMultiprocessing(unittest.TestCase):
             env["PYNOTIFY_THRESHOLD"] = "1"
             env["PYNOTIFY_MODE"] = "sound"  # Avoid popups during tests
             env["PYNOTIFY_REMOTE_BACKEND"] = "" # Disable heartbeat noise
+            env.pop("PYNOTIFY_ACTIVE_PID", None)
 
             r = subprocess.run(
                 [PYTHON, script_path],
