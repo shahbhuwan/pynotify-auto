@@ -15,13 +15,27 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 _config = cfg_module.load_config()
 
 def get_config(key, default=None):
     """Read config with fallback. Checks environment variables dynamically."""
-    env_val = os.environ.get(f"PYNOTIFY_{key.upper()}")
+    # Mapping of short env var names used in README to internal config keys
+    mapping = {
+        "threshold": "PYNOTIFY_THRESHOLD",
+        "progress_interval_minutes": "PYNOTIFY_PROGRESS_INTERVAL",
+        "log_lines": "PYNOTIFY_LOG_LINES",
+        "mode": "PYNOTIFY_MODE",
+        "disable": "PYNOTIFY_DISABLE",
+        "remote_backend": "PYNOTIFY_REMOTE_BACKEND",
+        "ntfy_topic": "PYNOTIFY_NTFY_TOPIC",
+        "telegram_bot_token": "PYNOTIFY_TELEGRAM_TOKEN",
+        "telegram_chat_id": "PYNOTIFY_TELEGRAM_CHAT_ID",
+    }
+    
+    env_key = mapping.get(key, f"PYNOTIFY_{key.upper()}")
+    env_val = os.environ.get(env_key)
     if env_val is not None:
         return env_val
     return _config.get(key, default)
@@ -111,29 +125,79 @@ def send_remote_notification(msg, title=None, success=True):
 # Stream Interception
 # ---------------------------------------------------------------------------
 
-class StreamInterceptor:
-    def __init__(self, original_stream, max_lines=10):
-        self.original_stream = original_stream
+class LogInterceptor:
+    """Captures all output at the OS File Descriptor level (FD 1 and 2).
+    This ensures we capture output from multiprocessing workers, C extensions, 
+    and subprocesses that bypass sys.stdout.
+    """
+    def __init__(self, max_lines=10):
         self.log_history = deque(maxlen=max_lines)
         self._lock = threading.Lock()
+        
+        try:
+            # Save original stdout to write back to the console
+            self.orig_stdout_fd = os.dup(sys.stdout.fileno())
+            
+            # Create pipe for interception
+            self.pipe_r, self.pipe_w = os.pipe()
+            
+            # Redirect stdout/stderr at FD level
+            os.dup2(self.pipe_w, sys.stdout.fileno())
+            os.dup2(self.pipe_w, sys.stderr.fileno())
+            
+            # Start reader thread
+            self.thread = threading.Thread(target=self._reader_loop, daemon=True)
+            self.thread.start()
+        except Exception:
+            pass
 
-    def write(self, text):
-        self.original_stream.write(text)
-        if text.strip():
-            with self._lock:
-                # Add timestamp to each line for context
-                timestamp = time.strftime("%H:%M:%S")
-                self.log_history.append(f"[{timestamp}] {text.strip()}")
+    def _reader_loop(self):
+        while True:
+            try:
+                data = os.read(self.pipe_r, 4096)
+                if not data: # EOF
+                    break
+                
+                # Echo to original console
+                os.write(self.orig_stdout_fd, data)
+                
+                # Update history
+                try:
+                    text = data.decode('utf-8', errors='replace')
+                    for line in text.splitlines():
+                        if line.strip():
+                            with self._lock:
+                                timestamp = time.strftime("%H:%M:%S")
+                                self.log_history.append(f"[{timestamp}] {line.strip()}")
+                except Exception:
+                    pass
+            except Exception:
+                break
 
-    def flush(self):
-        self.original_stream.flush()
+    def stop(self):
+        """Restore FDs and wait for reader thread to flush."""
+        try:
+            # Restore original FDs first so subsequent prints don't go to closed pipe
+            os.dup2(self.orig_stdout_fd, 1)
+            os.dup2(self.orig_stdout_fd, 2)
+            # Close pipe write end to trigger EOF in reader thread
+            os.close(self.pipe_w)
+            self.thread.join(timeout=1.0)
+            os.close(self.pipe_r)
+            os.close(self.orig_stdout_fd)
+        except Exception:
+            pass
 
     def get_logs(self):
         with self._lock:
             return list(self.log_history)
 
+    def flush(self):
+        pass
+
     def __getattr__(self, name):
-        return getattr(self.original_stream, name)
+        # Compatibility for anything looking for sys.stdout/stderr attributes
+        return getattr(sys.__stdout__, name)
 
 _interceptor = None
 
@@ -150,7 +214,14 @@ def _heartbeat_loop():
         return
 
     script_name = os.path.basename(sys.argv[0]) if sys.argv else "Python Script"
-    print(f"[pynotify-auto] Remote updates active. Next update in {interval/60:.1f} minutes.")
+    # Use a direct write to console for pynotify's own status messages
+    def _status_msg(m):
+        if _interceptor and hasattr(_interceptor, 'orig_stdout_fd'):
+            os.write(_interceptor.orig_stdout_fd, f"\n[pynotify-auto] {m}\n".encode())
+        else:
+            print(f"\n[pynotify-auto] {m}")
+
+    _status_msg(f"Remote updates active. Next update in {interval/60:.1f} minutes.")
     
     while True:
         time.sleep(interval)
@@ -162,10 +233,10 @@ def _heartbeat_loop():
         if logs:
             log_text = "\n".join(logs)
             msg = f"Still running...\n\nRecent output:\n{log_text}"
-            print(f"\n[pynotify-auto] Sending progress update to phone ({get_config('remote_backend')})...")
+            _status_msg(f"Sending progress update to phone ({get_config('remote_backend')})...")
             success = send_remote_notification(msg, title=f"Progress: {script_name}", success=True)
             if not success:
-                 print("[pynotify-auto] ⚠️ Remote update failed (check connection/topic)")
+                 _status_msg("⚠️ Remote update failed (check connection/topic)")
 
 
 # ---------------------------------------------------------------------------
@@ -237,6 +308,9 @@ def _ping_on_exit():
         print(f"\n{prefix} [pynotify-auto] {msg}")
         sys.stdout.flush()
 
+    if _interceptor:
+        _interceptor.stop()
+
 
 # ---------------------------------------------------------------------------
 # Setup
@@ -291,12 +365,12 @@ def install_hook():
         _original_exit(code)
     sys.exit = _capturing_exit
 
-    # Set up stream interception if remote backend is enabled
+    # Set up deep stream interception if remote backend is enabled
     if get_config("remote_backend"):
         max_lines = get_config("log_lines", 10)
-        _interceptor = StreamInterceptor(sys.stdout, max_lines=max_lines)
-        sys.stdout = _interceptor
-        sys.stderr = _interceptor # Shared interceptor for interleaved logs
+        _interceptor = LogInterceptor(max_lines=max_lines)
+        # No need to manually replace sys.stdout/stderr as FD redirection 
+        # covers everything at the OS level.
         
         # Start heartbeat thread
         t = threading.Thread(target=_heartbeat_loop, daemon=True)
