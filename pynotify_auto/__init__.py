@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.3"
+__version__ = "0.5.4"
 
 _config = cfg_module.load_config()
 
@@ -199,7 +199,139 @@ class LogInterceptor:
         # Compatibility for anything looking for sys.stdout/stderr attributes
         return getattr(sys.__stdout__, name)
 
+
+class _TeeStream:
+    """Wrap the real console streams and copy non-empty lines into log_history."""
+
+    def __init__(self, base, history: deque, lock: threading.Lock):
+        self._base = base
+        self._history = history
+        self._lock = lock
+
+    def write(self, s):
+        if not s:
+            return 0
+        if isinstance(s, bytes):
+            s = s.decode("utf-8", errors="replace")
+        try:
+            self._base.write(s)
+        except Exception:
+            pass
+        try:
+            self._base.flush()
+        except Exception:
+            pass
+        try:
+            for line in str(s).splitlines():
+                line = line.strip()
+                if line:
+                    with self._lock:
+                        ts = time.strftime("%H:%M:%S")
+                        self._history.append(f"[{ts}] {line}")
+        except Exception:
+            pass
+        try:
+            return len(s)
+        except Exception:
+            return 0
+
+    def flush(self):
+        try:
+            self._base.flush()
+        except Exception:
+            pass
+
+    def fileno(self):
+        return self._base.fileno()
+
+    def isatty(self):
+        try:
+            return self._base.isatty()
+        except Exception:
+            return False
+
+    @property
+    def encoding(self):
+        return getattr(self._base, "encoding", "utf-8")
+
+    def __getattr__(self, name):
+        return getattr(self._base, name)
+
+
+class PythonTeeInterceptor:
+    """Windows-safe capture for remote logs: tee via sys.stdout/sys.stderr only.
+
+    FD-level ``dup2`` redirection breaks the Windows console (OSError 22
+    'Incorrect function') for tracebacks and some IDE hooks; see LogInterceptor.
+    """
+
+    def __init__(self, max_lines=10):
+        self.log_history = deque(maxlen=max_lines)
+        self._lock = threading.Lock()
+        self._saved_stdout = sys.stdout
+        self._saved_stderr = sys.stderr
+        sys.stdout = _TeeStream(sys.__stdout__, self.log_history, self._lock)
+        sys.stderr = _TeeStream(sys.__stderr__, self.log_history, self._lock)
+
+    def stop(self):
+        try:
+            sys.stdout = self._saved_stdout
+            sys.stderr = self._saved_stderr
+        except Exception:
+            pass
+
+    def get_logs(self):
+        with self._lock:
+            return list(self.log_history)
+
+    def flush(self):
+        pass
+
+
 _interceptor = None
+
+
+def _stderr_from_fd_redirect() -> bool:
+    """True if LogInterceptor replaced FDs (has dup'd console fd)."""
+    global _interceptor
+    return bool(
+        _interceptor
+        and getattr(_interceptor, "orig_stdout_fd", None) is not None
+    )
+
+
+def _looks_like_pytest_runtime() -> bool:
+    """Avoid background heartbeat during pytest (capture / Win access violations)."""
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return True
+    if "_pytest" in sys.modules or "pytest" in sys.modules:
+        return True
+    args = sys.argv
+    if "-m" in args and any(a == "pytest" for a in args):
+        return True
+    try:
+        return os.path.basename(sys.argv[0]).lower().startswith("pytest")
+    except Exception:
+        return False
+
+
+def _safe_status_line(message: str) -> None:
+    """Write hook status without going through replaced sys.stdout (tee / capture safe)."""
+    text = f"\n[pynotify-auto] {message}\n"
+    data = text.encode("utf-8", errors="replace")
+    try:
+        if _stderr_from_fd_redirect():
+            os.write(_interceptor.orig_stdout_fd, data)
+            return
+    except Exception:
+        pass
+    try:
+        out = sys.__stdout__
+        out.write(text)
+        out.flush()
+    except Exception:
+        pass
+
 
 def _heartbeat_loop():
     """Background thread that sends periodic updates."""
@@ -214,12 +346,9 @@ def _heartbeat_loop():
         return
 
     script_name = os.path.basename(sys.argv[0]) if sys.argv else "Python Script"
-    # Use a direct write to console for pynotify's own status messages
+
     def _status_msg(m):
-        if _interceptor and hasattr(_interceptor, 'orig_stdout_fd'):
-            os.write(_interceptor.orig_stdout_fd, f"\n[pynotify-auto] {m}\n".encode())
-        else:
-            print(f"\n[pynotify-auto] {m}")
+        _safe_status_line(m)
 
     _status_msg(f"Remote updates active. Next update in {interval/60:.1f} minutes.")
     
@@ -305,8 +434,7 @@ def _ping_on_exit():
         send_remote_notification(remote_msg, title=f"Python Script {status_text.upper()}", success=success)
 
         prefix = "[SUCCESS]" if success else "[FAILED]"
-        print(f"\n{prefix} [pynotify-auto] {msg}")
-        sys.stdout.flush()
+        _safe_status_line(f"{prefix} {msg}")
 
     if _interceptor:
         _interceptor.stop()
@@ -365,15 +493,17 @@ def install_hook():
         _original_exit(code)
     sys.exit = _capturing_exit
 
-    # Set up deep stream interception if remote backend is enabled
+    # Capture script output for remote "recent logs" feature.
+    # On Windows, FD-level dup2 breaks the console (tracebacks → OSError 22).
     if get_config("remote_backend"):
         max_lines = get_config("log_lines", 10)
-        _interceptor = LogInterceptor(max_lines=max_lines)
-        # No need to manually replace sys.stdout/stderr as FD redirection 
-        # covers everything at the OS level.
-        
-        # Start heartbeat thread
-        t = threading.Thread(target=_heartbeat_loop, daemon=True)
-        t.start()
+        if sys.platform == "win32":
+            _interceptor = PythonTeeInterceptor(max_lines=max_lines)
+        else:
+            _interceptor = LogInterceptor(max_lines=max_lines)
+
+        if not _looks_like_pytest_runtime():
+            t = threading.Thread(target=_heartbeat_loop, daemon=True)
+            t.start()
 
     atexit.register(_ping_on_exit)

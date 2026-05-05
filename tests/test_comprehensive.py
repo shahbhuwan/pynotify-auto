@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.5.3 rewrite.
+Comprehensive test suite for pynotify-auto v0.5.4 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.5.3")
+        self.assertEqual(pynotify_auto.__version__, "0.5.4")
 
 
 class TestConfig(unittest.TestCase):
@@ -339,7 +339,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.5.3", r.stdout)
+        self.assertIn("0.5.4", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
@@ -410,6 +410,29 @@ class TestMultiprocessing(unittest.TestCase):
         finally:
             if os.path.exists(script_path):
                 os.remove(script_path)
+
+
+class TestPythonTeeInterceptor(unittest.TestCase):
+    """Windows fix: Python-layer tee must not use os.dup2 (breaks console/tracebacks)."""
+
+    def test_tee_captures_stderr_and_restores(self):
+        from pynotify_auto import PythonTeeInterceptor
+
+        saved_out, saved_err = sys.stdout, sys.stderr
+        tee = PythonTeeInterceptor(max_lines=10)
+        try:
+            sys.stderr.write("pynotify_unit_test_line\n")
+            sys.stderr.flush()
+            logs = tee.get_logs()
+            self.assertTrue(
+                any("pynotify_unit_test_line" in entry for entry in logs),
+                msg=f"logs={logs!r}",
+            )
+        finally:
+            tee.stop()
+
+        self.assertIs(sys.stdout, saved_out)
+        self.assertIs(sys.stderr, saved_err)
 
 
 if __name__ == "__main__":
