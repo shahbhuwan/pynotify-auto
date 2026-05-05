@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.5.6 rewrite.
+Comprehensive test suite for pynotify-auto v0.5.7 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.5.6")
+        self.assertEqual(pynotify_auto.__version__, "0.5.7")
 
 
 class TestConfig(unittest.TestCase):
@@ -339,7 +339,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.5.6", r.stdout)
+        self.assertIn("0.5.7", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
@@ -432,7 +432,8 @@ class TestPackagingCliSkipped(unittest.TestCase):
 
         old = sys.argv
         try:
-            sys.argv = [r"C:\Env\Scripts\pip.exe", "install", "x"]
+            path = os.path.join("env", "scripts", "pip.exe")
+            sys.argv = [path, "install", "x"]
             self.assertTrue(_looks_like_packaging_cli())
         finally:
             sys.argv = old

@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.6"
+__version__ = "0.5.7"
 
 _config = cfg_module.load_config()
 
@@ -333,7 +333,8 @@ def _looks_like_packaging_cli() -> bool:
     if not argv:
         return False
     try:
-        base = os.path.basename(argv[0]).lower()
+        # Platform-independent basename: handles both / and \ regardless of host OS
+        base = argv[0].replace('\\', '/').split('/')[-1].lower()
     except Exception:
         return False
     # pip.exe, pip3.exe, conda.exe, uv.exe, poetry.exe, ...
