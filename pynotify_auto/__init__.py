@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.4"
+__version__ = "0.5.6"
 
 _config = cfg_module.load_config()
 
@@ -201,7 +201,13 @@ class LogInterceptor:
 
 
 class _TeeStream:
-    """Wrap the real console streams and copy non-empty lines into log_history."""
+    """Wrap the real console streams and copy non-empty lines into log_history.
+
+    Must never raise from ``write`` / ``flush``: ``print(..., flush=True)`` and IDEs
+    assume stdout is reliable. Do **not** call ``flush()`` inside ``write`` — Python's
+    ``print`` already calls ``flush`` after ``write``; double-flushing the Windows
+    console often raises ``OSError`` (WinError 1 / 22).
+    """
 
     def __init__(self, base, history: deque, lock: threading.Lock):
         self._base = base
@@ -213,12 +219,12 @@ class _TeeStream:
             return 0
         if isinstance(s, bytes):
             s = s.decode("utf-8", errors="replace")
+        n = len(s)
         try:
             self._base.write(s)
-        except Exception:
+        except (OSError, IOError, ValueError, RuntimeError):
+            # Still report success so ``print`` / logging do not abort the host script.
             pass
-        try:
-            self._base.flush()
         except Exception:
             pass
         try:
@@ -230,19 +236,21 @@ class _TeeStream:
                         self._history.append(f"[{ts}] {line}")
         except Exception:
             pass
-        try:
-            return len(s)
-        except Exception:
-            return 0
+        return n
 
     def flush(self):
         try:
             self._base.flush()
+        except (OSError, IOError, ValueError, RuntimeError):
+            pass
         except Exception:
             pass
 
     def fileno(self):
-        return self._base.fileno()
+        try:
+            return self._base.fileno()
+        except (OSError, AttributeError, ValueError):
+            return -1
 
     def isatty(self):
         try:
@@ -253,6 +261,10 @@ class _TeeStream:
     @property
     def encoding(self):
         return getattr(self._base, "encoding", "utf-8")
+
+    @property
+    def errors(self):
+        return getattr(self._base, "errors", "replace")
 
     def __getattr__(self, name):
         return getattr(self._base, name)
@@ -313,6 +325,57 @@ def _looks_like_pytest_runtime() -> bool:
         return os.path.basename(sys.argv[0]).lower().startswith("pytest")
     except Exception:
         return False
+
+
+def _looks_like_packaging_cli() -> bool:
+    """pip/conda/uv attach pipes to stdout/stderr; tee wrappers break them (OSError 22, broken pipe)."""
+    argv = sys.argv
+    if not argv:
+        return False
+    try:
+        base = os.path.basename(argv[0]).lower()
+    except Exception:
+        return False
+    # pip.exe, pip3.exe, conda.exe, uv.exe, poetry.exe, ...
+    exe_prefixes = (
+        "pip",
+        "conda",
+        "conda-env",
+        "micromamba",
+        "mamba",
+        "uv",
+        "poetry",
+        "pdm",
+        "hatch",
+        "twine",
+        "wheel",
+    )
+    for p in exe_prefixes:
+        if base == p + ".exe" or base.startswith(p + ".") or base == p:
+            return True
+    # python.exe -m pip / -m ensurepip / -m build / ...
+    if "-m" in argv:
+        try:
+            mi = argv.index("-m")
+            if mi + 1 < len(argv):
+                root_mod = argv[mi + 1].split(".")[0].lower()
+                if root_mod in (
+                    "pip",
+                    "ensurepip",
+                    "venv",
+                    "build",
+                    "installer",
+                    "wheel",
+                    "twine",
+                    "setuptools",
+                ):
+                    return True
+        except ValueError:
+            pass
+    # python setup.py ...
+    if any("setup.py" in (a or "") for a in argv[1:6]):
+        return True
+    return False
 
 
 def _safe_status_line(message: str) -> None:
@@ -453,6 +516,9 @@ def install_hook():
     global _hook_registered, hook_active, _start_time, _exit_code, _interceptor
 
     if _hook_registered:
+        return
+
+    if _looks_like_packaging_cli():
         return
 
     # 🛑 NESTED SUPPRESSION

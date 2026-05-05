@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for pynotify-auto v0.5.4 rewrite.
+Comprehensive test suite for pynotify-auto v0.5.6 rewrite.
 
 Covers:
   - Public API surface (no private imports needed)
@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.5.4")
+        self.assertEqual(pynotify_auto.__version__, "0.5.6")
 
 
 class TestConfig(unittest.TestCase):
@@ -339,7 +339,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.5.4", r.stdout)
+        self.assertIn("0.5.6", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
@@ -410,6 +410,61 @@ class TestMultiprocessing(unittest.TestCase):
         finally:
             if os.path.exists(script_path):
                 os.remove(script_path)
+
+
+class TestPackagingCliSkipped(unittest.TestCase):
+    """pip/conda must not get stdout wrappers (breaks pipes)."""
+
+    def test_pip_module_argv_detected(self):
+        from pynotify_auto import _looks_like_packaging_cli
+
+        old = sys.argv
+        try:
+            sys.argv = [sys.executable, "-m", "pip", "install", "x"]
+            self.assertTrue(_looks_like_packaging_cli())
+            sys.argv = [sys.executable, "-m", "pytest", "x"]
+            self.assertFalse(_looks_like_packaging_cli())
+        finally:
+            sys.argv = old
+
+    def test_pip_exe_detected(self):
+        from pynotify_auto import _looks_like_packaging_cli
+
+        old = sys.argv
+        try:
+            sys.argv = [r"C:\Env\Scripts\pip.exe", "install", "x"]
+            self.assertTrue(_looks_like_packaging_cli())
+        finally:
+            sys.argv = old
+
+
+class TestTeeStreamResilience(unittest.TestCase):
+    """Tee must not break host scripts if the real console write/flush fails (Windows)."""
+
+    def test_tee_write_returns_len_even_if_base_raises(self):
+        from pynotify_auto import _TeeStream
+        from collections import deque
+        import threading
+
+        class BrokenConsole:
+            def write(self, s):
+                raise OSError(1, "Incorrect function")
+
+            def flush(self):
+                raise OSError(1, "Incorrect function")
+
+        hist = deque(maxlen=10)
+        tee = _TeeStream(BrokenConsole(), hist, threading.Lock())
+        n = tee.write("still ok\n")
+        self.assertEqual(n, len("still ok\n"))
+        tee.flush()  # must not raise
+
+    def test_tee_no_double_flush_in_write(self):
+        import pynotify_auto
+        import inspect
+
+        src = inspect.getsource(pynotify_auto._TeeStream.write)
+        self.assertNotIn("self._base.flush()", src, "flush in write() causes WinError on some consoles")
 
 
 class TestPythonTeeInterceptor(unittest.TestCase):
