@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.7"
+__version__ = "0.5.8"
 
 _config = cfg_module.load_config()
 
@@ -135,6 +135,7 @@ class LogInterceptor:
         self._lock = threading.Lock()
         
         try:
+            import io
             # Save original stdout to write back to the console
             self.orig_stdout_fd = os.dup(sys.stdout.fileno())
             
@@ -144,6 +145,13 @@ class LogInterceptor:
             # Redirect stdout/stderr at FD level
             os.dup2(self.pipe_w, sys.stdout.fileno())
             os.dup2(self.pipe_w, sys.stderr.fileno())
+            
+            # WINDOWS STABILITY FIX:
+            # Re-initialize Python's sys.stdout/stderr objects.
+            # This prevents OSError 22 (Incorrect function) because Python now
+            # knows it is writing to a pipe instead of a console.
+            sys.stdout = io.TextIOWrapper(os.fdopen(sys.stdout.fileno(), 'wb'), line_buffering=True)
+            sys.stderr = io.TextIOWrapper(os.fdopen(sys.stderr.fileno(), 'wb'), line_buffering=True)
             
             # Start reader thread
             self.thread = threading.Thread(target=self._reader_loop, daemon=True)
@@ -166,6 +174,9 @@ class LogInterceptor:
                     text = data.decode('utf-8', errors='replace')
                     for line in text.splitlines():
                         if line.strip():
+                            # Filter out pynotify's own status messages from history
+                            if "[pynotify-auto]" in line:
+                                continue
                             with self._lock:
                                 timestamp = time.strftime("%H:%M:%S")
                                 self.log_history.append(f"[{timestamp}] {line.strip()}")
@@ -200,104 +211,6 @@ class LogInterceptor:
         return getattr(sys.__stdout__, name)
 
 
-class _TeeStream:
-    """Wrap the real console streams and copy non-empty lines into log_history.
-
-    Must never raise from ``write`` / ``flush``: ``print(..., flush=True)`` and IDEs
-    assume stdout is reliable. Do **not** call ``flush()`` inside ``write`` — Python's
-    ``print`` already calls ``flush`` after ``write``; double-flushing the Windows
-    console often raises ``OSError`` (WinError 1 / 22).
-    """
-
-    def __init__(self, base, history: deque, lock: threading.Lock):
-        self._base = base
-        self._history = history
-        self._lock = lock
-
-    def write(self, s):
-        if not s:
-            return 0
-        if isinstance(s, bytes):
-            s = s.decode("utf-8", errors="replace")
-        n = len(s)
-        try:
-            self._base.write(s)
-        except (OSError, IOError, ValueError, RuntimeError):
-            # Still report success so ``print`` / logging do not abort the host script.
-            pass
-        except Exception:
-            pass
-        try:
-            for line in str(s).splitlines():
-                line = line.strip()
-                if line:
-                    with self._lock:
-                        ts = time.strftime("%H:%M:%S")
-                        self._history.append(f"[{ts}] {line}")
-        except Exception:
-            pass
-        return n
-
-    def flush(self):
-        try:
-            self._base.flush()
-        except (OSError, IOError, ValueError, RuntimeError):
-            pass
-        except Exception:
-            pass
-
-    def fileno(self):
-        try:
-            return self._base.fileno()
-        except (OSError, AttributeError, ValueError):
-            return -1
-
-    def isatty(self):
-        try:
-            return self._base.isatty()
-        except Exception:
-            return False
-
-    @property
-    def encoding(self):
-        return getattr(self._base, "encoding", "utf-8")
-
-    @property
-    def errors(self):
-        return getattr(self._base, "errors", "replace")
-
-    def __getattr__(self, name):
-        return getattr(self._base, name)
-
-
-class PythonTeeInterceptor:
-    """Windows-safe capture for remote logs: tee via sys.stdout/sys.stderr only.
-
-    FD-level ``dup2`` redirection breaks the Windows console (OSError 22
-    'Incorrect function') for tracebacks and some IDE hooks; see LogInterceptor.
-    """
-
-    def __init__(self, max_lines=10):
-        self.log_history = deque(maxlen=max_lines)
-        self._lock = threading.Lock()
-        self._saved_stdout = sys.stdout
-        self._saved_stderr = sys.stderr
-        sys.stdout = _TeeStream(sys.__stdout__, self.log_history, self._lock)
-        sys.stderr = _TeeStream(sys.__stderr__, self.log_history, self._lock)
-
-    def stop(self):
-        try:
-            sys.stdout = self._saved_stdout
-            sys.stderr = self._saved_stderr
-        except Exception:
-            pass
-
-    def get_logs(self):
-        with self._lock:
-            return list(self.log_history)
-
-    def flush(self):
-        pass
 
 
 _interceptor = None
@@ -564,10 +477,7 @@ def install_hook():
     # On Windows, FD-level dup2 breaks the console (tracebacks → OSError 22).
     if get_config("remote_backend"):
         max_lines = get_config("log_lines", 10)
-        if sys.platform == "win32":
-            _interceptor = PythonTeeInterceptor(max_lines=max_lines)
-        else:
-            _interceptor = LogInterceptor(max_lines=max_lines)
+        _interceptor = LogInterceptor(max_lines=max_lines)
 
         if not _looks_like_pytest_runtime():
             t = threading.Thread(target=_heartbeat_loop, daemon=True)
