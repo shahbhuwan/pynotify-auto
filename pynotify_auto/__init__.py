@@ -1,5 +1,5 @@
 """
-pynotify-auto: Zero-code notifications for long-running scripts.
+Know when your Python scripts finish or fail. Desktop or optional phone alerts—no edits to your scripts.
 
 Triggered via .pth file. Calling install_hook() registers an exit handler
 to ping the user if the script ran longer than the threshold.
@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.5.9"
+__version__ = "0.6.0"
 
 _config = cfg_module.load_config()
 
@@ -173,13 +173,27 @@ class LogInterceptor:
                 try:
                     text = data.decode('utf-8', errors='replace')
                     for line in text.splitlines():
-                        if line.strip():
+                        line = line.strip()
+                        if line:
                             # Filter out pynotify's own status messages from history
                             if "[pynotify-auto]" in line:
                                 continue
+                            
+                            # TQDM FILTER: If this is just a progress bar update,
+                            # only keep it if the last line wasn't also a progress bar update
+                            # or if this one is significantly different.
+                            # (Simpler: avoid storing too many identical-looking progress lines)
                             with self._lock:
+                                # If the line looks like a progress bar (has | and %)
+                                is_progress = "|" in line and "%" in line
+                                if is_progress and self.log_history:
+                                    last_line = self.log_history[-1]
+                                    if "|" in last_line and "%" in last_line:
+                                        # Replace the last progress update instead of appending
+                                        self.log_history.pop()
+                                
                                 timestamp = time.strftime("%H:%M:%S")
-                                self.log_history.append(f"[{timestamp}] {line.strip()}")
+                                self.log_history.append(f"[{timestamp}] {line}")
                 except Exception:
                     pass
             except Exception:
@@ -304,8 +318,14 @@ def _safe_status_line(message: str) -> None:
         pass
     try:
         out = sys.__stdout__
-        out.write(text)
-        out.flush()
+        # On Windows, writing emojis to a non-UTF8 console can crash.
+        # Use the raw buffer if available to avoid encoding issues.
+        if hasattr(out, "buffer"):
+            out.buffer.write(data)
+            out.buffer.flush()
+        else:
+            out.write(text)
+            out.flush()
     except Exception:
         pass
 
@@ -342,7 +362,7 @@ def _heartbeat_loop():
             _status_msg(f"Sending progress update to phone ({get_config('remote_backend')})...")
             success = send_remote_notification(msg, title=f"Progress: {script_name}", success=True)
             if not success:
-                 _status_msg("⚠️ Remote update failed (check connection/topic)")
+                 _status_msg("Remote update failed (check connection/topic)")
 
 
 # ---------------------------------------------------------------------------

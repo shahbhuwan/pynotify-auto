@@ -1,5 +1,5 @@
 site_name: pynotify-auto
-site_description: Zero-Code automatic notifications for long-running Python scripts.
+site_description: Know when your Python scripts finish or fail. Desktop or optional phone alerts—no edits to your scripts.
 site_url: https://shahbhuwan.github.io/pynotify-auto/
 repo_url: https://github.com/shahbhuwan/pynotify-auto
 theme:
@@ -20,6 +20,8 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Usage: usage.md
+  - Comparison: COMPARISON.md
+  - "Tutorial vignette": tutorial-vignette.md
   - Contributing: contributing.md
 
 markdown_extensions:

@@ -1,6 +1,8 @@
 # Welcome to pynotify-auto
 
-**Zero-Code automatic notifications for any long-running Python script.**
+**Know when your Python scripts finish or fail.**
+
+Get alerts on your computer or on your phone when a run completes or crashes—so you can step away from your desk. Install once; nothing to import or add to your scripts.
 
 Stop babysitting your terminal. Whether you're training models, processing datasets, or running complex simulations, `pynotify-auto` pings you the moment your task is done—so you can focus on what matters.
 
@@ -33,3 +35,11 @@ python -c "import time; time.sleep(6)"
 ```
 
 You should receive a notification!
+
+## Compared to other libraries
+
+See **[Comparison](COMPARISON.md)** for how `pynotify-auto` differs from Apprise, Plyer, notifiers, and knockknock.
+
+## Tutorial vignette
+
+Follow **[tutorial-vignette.md](tutorial-vignette.md)** for a complete hands-on walkthrough: install, thresholds, local modes, Ntfy and Telegram, progress interval, and environment variables.

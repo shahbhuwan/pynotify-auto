@@ -1,8 +1,8 @@
 # pynotify-auto
 
-# **Smart, effortless notifications for your Python scripts.**
+**Know when your Python scripts finish or fail.**
 
-## **Stay informed on your desktop or your phone, without changing a single line of code.**
+Get alerts on your computer or on your phone when a run completes or crashes—so you can step away from your desk. Install once; nothing to import or add to your scripts.
 
 ---
 
@@ -30,6 +30,14 @@ Traditional notification libraries require you to manually add decorators or ext
 - **Smart Thresholding**: Only pings if the script ran for a meaningful amount of time (default > 5s).
 - **Cross-Platform**: Works on Windows, macOS, and Linux.
 - **Configurable**: Change the threshold or disable it via environment variables.
+
+## Compared to other tools
+
+For a concise comparison with **Apprise**, **Plyer**, **notifiers**, and **knockknock** (integration style, desktop vs remote, when to use what), see **[docs/COMPARISON.md](docs/COMPARISON.md)**.
+
+For a Medium / Dev.to–style article draft you can adapt and publish, see **[docs/article-notification-libraries-compared.md](docs/article-notification-libraries-compared.md)**.
+
+For a **full tutorial vignette** (install, hook, thresholds, modes, Ntfy/Telegram, env vars, CLI), see **[docs/tutorial-vignette.md](docs/tutorial-vignette.md)**.
 
 ## Installation
 
@@ -91,7 +99,7 @@ All settings are stored in `~/.pynotify.json`. You can also override them using 
 | **Progress Interval** | `progress_interval_minutes` | `PYNOTIFY_PROGRESS_INTERVAL` | `30` (min) |
 | **Log History** | `log_lines` | `PYNOTIFY_LOG_LINES` | `10` |
 | **Backend** | `remote_backend` | `PYNOTIFY_REMOTE_BACKEND` | `None` |
-| **Ntfy Topic** | `ntfy_topic` | `PYNOTIFY_NTFY_TOPIC" | `None` |
+| **Ntfy Topic** | `ntfy_topic` | `PYNOTIFY_NTFY_TOPIC` | `None` |
 | **Telegram Token** | `telegram_bot_token` | `PYNOTIFY_TELEGRAM_TOKEN` | `None` |
 | **Telegram Chat ID** | `telegram_chat_id` | `PYNOTIFY_TELEGRAM_CHAT_ID` | `None` |
 

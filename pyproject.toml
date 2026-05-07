@@ -4,26 +4,40 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynotify-auto"
-version = "0.5.9"
+version = "0.6.0"
 authors = [
   { name="Bhuwan Shah" },
 ]
-description = "Zero-Code automatic notifications for long-running Python scripts."
+description = "Know when your Python scripts finish or fail. Desktop or optional phone alerts—no edits to your scripts."
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
-keywords = ["notification", "automation", "development", "utility", "alerts"]
+keywords = [
+    "notification",
+    "python",
+    "desktop",
+    "ntfy",
+    "telegram",
+    "toast",
+    "libnotify",
+    "developer-tools",
+    "long-running",
+    "automation",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
     "Topic :: Utilities",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Monitoring",
 ]
 dependencies = []
 
 [project.urls]
 "Homepage" = "https://github.com/shahbhuwan/pynotify-auto"
+"Documentation" = "https://shahbhuwan.github.io/pynotify-auto/"
 "Bug Tracker" = "https://github.com/shahbhuwan/pynotify-auto/issues"
 "Source Code" = "https://github.com/shahbhuwan/pynotify-auto"
 

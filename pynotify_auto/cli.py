@@ -5,7 +5,7 @@ from pynotify_auto import show_popup, play_sound, get_config, hook_active, send_
 
 def main():
     parser = argparse.ArgumentParser(
-        description="pynotify-auto: Zero-Code automatic notifications for Python scripts."
+        description="pynotify-auto: know when your Python scripts finish or fail. Desktop or optional phone alerts—no edits to your scripts."
     )
     parser.add_argument("--test", action="store_true", help="Trigger a test notification.")
     parser.add_argument("--info", action="store_true", help="Show current configuration and hook status.")
@@ -155,7 +155,7 @@ def main():
             if not success:
                 print("❌ Remote notification FAILED. Check your tokens/topic.")
             else:
-                print("✅ Remote notification sent!")
+                print("Remote notification sent! OK")
 
         print(f"Triggering local notification (Mode: {mode})...")
         if mode == "sound":
