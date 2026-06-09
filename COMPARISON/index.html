@@ -1,0 +1,1068 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Know when your Python scripts finish or fail. Desktop or optional phone alerts—no edits to your scripts.">
+      
+      
+      
+        <link rel="canonical" href="https://shahbhuwan.github.io/pynotify-auto/COMPARISON/">
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../tutorial-vignette/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Comparison - pynotify-auto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-pynotify-auto-compares-to-other-python-notification-tools" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pynotify-auto" class="md-header__button md-logo" aria-label="pynotify-auto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pynotify-auto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Comparison
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/shahbhuwan/pynotify-auto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../usage.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Comparison
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../tutorial-vignette/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Tutorial vignette
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pynotify-auto" class="md-nav__button md-logo" aria-label="pynotify-auto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    pynotify-auto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/shahbhuwan/pynotify-auto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-pynotify-auto-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What makes pynotify-auto different?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-by-library-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Library-by-library notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Library-by-library notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apprise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plyer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plyer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        notifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knockknock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knockknock
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-unique-to-pynotify-auto-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features unique to pynotify-auto (today)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#honest-limitations-of-pynotify-auto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Honest limitations of pynotify-auto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial-vignette/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial vignette
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-pynotify-auto-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What makes pynotify-auto different?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-by-library-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Library-by-library notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Library-by-library notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apprise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plyer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plyer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        notifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knockknock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knockknock
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-unique-to-pynotify-auto-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features unique to pynotify-auto (today)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#honest-limitations-of-pynotify-auto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Honest limitations of pynotify-auto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-pynotify-auto-compares-to-other-python-notification-tools">How <code>pynotify-auto</code> compares to other Python notification tools</h1>
+<p>This page compares <strong>pynotify-auto</strong> with several widely used libraries so you can pick the right tool. It is written to be fair: each project optimizes for different goals.</p>
+<h2 id="tldr">TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Main idea</th>
+<th>Add code to each script?</th>
+<th>Typical desktop alert</th>
+<th>Typical phone / remote</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://pypi.org/project/pynotify-auto/"><strong>pynotify-auto</strong></a></td>
+<td>Install once, optional <code>.pth</code> hook → notify on script exit</td>
+<td><strong>No</strong> (after <code>pynotify-auto --enable</code> in that environment)</td>
+<td>Native OS toast / notification (Windows, macOS, Linux)</td>
+<td>Optional <strong>Ntfy</strong> or <strong>Telegram</strong> + log snapshots</td>
+</tr>
+<tr>
+<td><a href="https://pypi.org/project/apprise/"><strong>Apprise</strong></a></td>
+<td>One library, many notification URLs</td>
+<td><strong>Yes</strong> — you call <code>notify()</code> (or use the CLI)</td>
+<td>Possible via plugins / OS; not the core focus</td>
+<td>Excellent — 100+ services (Slack, Discord, email, …)</td>
+</tr>
+<tr>
+<td><a href="https://pypi.org/project/plyer/"><strong>Plyer</strong></a></td>
+<td>Cross-platform facade for mobile/desktop APIs</td>
+<td><strong>Yes</strong> — import and call Plyer in your app</td>
+<td>Strong for simple desktop/mobile notifications</td>
+<td>Depends on platform APIs you wire up</td>
+</tr>
+<tr>
+<td><a href="https://pypi.org/project/notifiers/"><strong>notifiers</strong></a></td>
+<td>Unified interface to many providers</td>
+<td><strong>Yes</strong> — API or CLI</td>
+<td>Not primary focus</td>
+<td>Many providers (Telegram, Pushover, …)</td>
+</tr>
+<tr>
+<td><a href="https://pypi.org/project/knockknock/"><strong>knockknock</strong></a></td>
+<td>Notify when long jobs finish (often ML / training)</td>
+<td><strong>Yes</strong> — decorators or wrappers around your entrypoints</td>
+<td>Usually indirect (email / messaging)</td>
+<td>Email and optional channels depending on setup</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-makes-pynotify-auto-different">What makes <code>pynotify-auto</code> different?</h2>
+<p>Most libraries assume you <strong>control the source</strong> of each script and are happy to add imports, decorators, or <code>notify()</code> calls.</p>
+<p><strong>pynotify-auto</strong> targets a different situation:</p>
+<ul>
+<li>You run <strong>many one-off scripts</strong> (analysis, scrapers, batch jobs) and do not want to edit each file.</li>
+<li>You want <strong>finish / failure awareness</strong> without threading notification code through every project.</li>
+<li>You may <strong>leave your desk</strong> and still want alerts (<strong>Ntfy</strong> / <strong>Telegram</strong>) plus optional rolling log snapshots.</li>
+</ul>
+<p>Integration is <strong>environment-level</strong>: install the package, run <code>pynotify-auto --enable</code> once per virtualenv (or equivalent), and scripts in that environment get exit notifications subject to your threshold and settings.</p>
+<hr />
+<h2 id="library-by-library-notes">Library-by-library notes</h2>
+<h3 id="apprise">Apprise</h3>
+<ul>
+<li><strong>Strengths:</strong> Huge number of backends, mature API, CLI for scripting and automation, great when notifications are a first-class part of your application design.</li>
+<li><strong>Contrast:</strong> You still <strong>invoke</strong> Apprise from code (or shell out to <code>apprise</code>). It does not automatically notify on every arbitrary <code>python myscript.py</code> exit unless you add that call or wrapper yourself.</li>
+</ul>
+<p><strong>Use Apprise when:</strong> You want maximum flexibility of channels and are fine adding explicit notification logic (or centralizing it in your own helper).</p>
+<hr />
+<h3 id="plyer">Plyer</h3>
+<ul>
+<li><strong>Strengths:</strong> Simple cross-platform API for notifications (and other platform features); familiar if you already structure apps around explicit UI/platform calls.</li>
+<li><strong>Contrast:</strong> Each script or app must <strong>import Plyer and call</strong> the notification APIs.</li>
+</ul>
+<p><strong>Use Plyer when:</strong> You own the codebase and want portable notification calls inside your application.</p>
+<hr />
+<h3 id="notifiers">notifiers</h3>
+<ul>
+<li><strong>Strengths:</strong> Clean unified API and CLI across multiple providers; good for “send this message to Slack/Telegram/email.”</li>
+<li><strong>Contrast:</strong> Same pattern — <strong>explicit calls</strong> from your code or CLI in your pipeline.</li>
+</ul>
+<p><strong>Use notifiers when:</strong> You want a lighter-weight multi-provider layer than rolling everything yourself, with explicit sends.</p>
+<hr />
+<h3 id="knockknock">knockknock</h3>
+<ul>
+<li><strong>Strengths:</strong> Familiar in ML workflows; decorators like “email me when training completes”; integrates with common training stacks.</li>
+<li><strong>Contrast:</strong> Designed around <strong>wrapping</strong> training or job entrypoints, not silent global behavior for every Python process in an environment.</li>
+</ul>
+<p><strong>Use knockknock when:</strong> You mainly care about long-running training jobs and are happy to decorate or wrap those functions.</p>
+<hr />
+<h2 id="features-unique-to-pynotify-auto-today">Features unique to <code>pynotify-auto</code> (today)</h2>
+<p>These are intentional design choices; other tools may not aim for them:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>pynotify-auto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No edits to individual scripts</td>
+<td>Yes — hook runs when the interpreter loads (per enabled environment)</td>
+</tr>
+<tr>
+<td>Threshold so trivial runs stay quiet</td>
+<td>Yes — default minimum duration before notifying</td>
+</tr>
+<tr>
+<td>Optional remote <strong>log excerpts</strong> with crashes / progress cadence</td>
+<td>Yes — when remote backends are configured</td>
+</tr>
+<tr>
+<td>100+ arbitrary backends in one dependency tree</td>
+<td>No — focused on <strong>desktop + Ntfy + Telegram</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="honest-limitations-of-pynotify-auto">Honest limitations of <code>pynotify-auto</code></h2>
+<ul>
+<li><strong>Per-environment setup:</strong> You need <code>pip install</code> and <strong><code>pynotify-auto --enable</code></strong> (and possibly elevated permissions on some global Python installs). This is not “magic on every machine worldwide” without that step.</li>
+<li><strong>Not a fit for library authors as a hidden dependency:</strong> Shipping a <code>.pth</code> hook as a transitive dependency of another library can surprise users; this tool is aimed at <strong>end users / developers</strong> opting in for their own environments.</li>
+<li><strong>Script-oriented:</strong> Behavior is tuned for running scripts (not primarily for interactive notebooks / IPython).</li>
+<li><strong>Fewer backends than Apprise:</strong> If you need Microsoft Teams, Discord, Slack, etc., <strong>Apprise</strong> (or a dedicated SDK) is the more natural fit — you can still use <code>pynotify-auto</code> locally and Apprise in code if you ever combine both.</li>
+</ul>
+<hr />
+<h2 id="summary">Summary</h2>
+<ul>
+<li>Choose <strong>Apprise</strong> or <strong>notifiers</strong> when you want <strong>explicit, rich routing</strong> to many services from code you control.</li>
+<li>Choose <strong>Plyer</strong> when you want a <strong>single portable API</strong> inside your app.</li>
+<li>Choose <strong>knockknock</strong> when you want <strong>decorated ML / training</strong> workflows.</li>
+<li>Choose <strong>pynotify-auto</strong> when you want <strong>finish/failure awareness across scripts</strong> with <strong>minimal per-file work</strong>, optional <strong>phone</strong> alerts, and <strong>desktop</strong> integration without editing each script.</li>
+</ul>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../README.md">README</a> — install, <code>--enable</code>, remote setup  </li>
+<li><a href="https://shahbhuwan.github.io/pynotify-auto/">Documentation site</a></li>
+</ul>
+<p>If you spot a factual error or an important library we should list, open an issue or PR.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
