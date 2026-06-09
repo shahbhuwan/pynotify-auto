@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.6.1")
+        self.assertEqual(pynotify_auto.__version__, "0.6.2")
 
 
 class TestConfig(unittest.TestCase):
@@ -327,7 +327,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.6.1", r.stdout)
+        self.assertIn("0.6.2", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
