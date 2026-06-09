@@ -49,7 +49,7 @@ class TestPublicAPI(unittest.TestCase):
 
     def test_version_string(self):
         import pynotify_auto
-        self.assertEqual(pynotify_auto.__version__, "0.5.9")
+        self.assertEqual(pynotify_auto.__version__, "0.6.1")
 
 
 class TestConfig(unittest.TestCase):

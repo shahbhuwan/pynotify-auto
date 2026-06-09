@@ -15,7 +15,7 @@ from collections import deque
 from . import config as cfg_module
 from . import remote
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 _config = cfg_module.load_config()
 
@@ -153,6 +153,16 @@ class LogInterceptor:
             sys.stdout = io.TextIOWrapper(os.fdopen(sys.stdout.fileno(), 'wb'), line_buffering=True)
             sys.stderr = io.TextIOWrapper(os.fdopen(sys.stderr.fileno(), 'wb'), line_buffering=True)
             
+            # CRITICAL FIX for tqdm and other libraries:
+            # If a library explicitly uses `sys.__stdout__` (which points to the original console),
+            # it will crash with `[WinError 1] Incorrect function` because the underlying FD 1 
+            # has been swapped to a pipe. We must also wrap the __stdout__ references.
+            if sys.platform == "win32":
+                self._old_dunder_out = sys.__stdout__
+                self._old_dunder_err = sys.__stderr__
+                sys.__stdout__ = sys.stdout
+                sys.__stderr__ = sys.stderr
+                
             # Start reader thread
             self.thread = threading.Thread(target=self._reader_loop, daemon=True)
             self.thread.start()
@@ -210,6 +220,12 @@ class LogInterceptor:
             self.thread.join(timeout=1.0)
             os.close(self.pipe_r)
             os.close(self.orig_stdout_fd)
+            
+            # Restore __stdout__ and __stderr__ if we spoofed them
+            if hasattr(self, "_old_dunder_out"):
+                sys.__stdout__ = self._old_dunder_out
+                sys.__stderr__ = self._old_dunder_err
+                
         except Exception:
             pass
 
@@ -370,21 +386,17 @@ def _heartbeat_loop():
 # ---------------------------------------------------------------------------
 
 _exit_code = None
+_unhandled_exception = False
 
 def _detect_failure():
     """True if we're exiting due to a crash or non-zero sys.exit()."""
-    global _exit_code
+    global _exit_code, _unhandled_exception
 
     if _exit_code is not None:
         return _exit_code not in (0, None)
 
-    last_type = getattr(sys, "last_type", None)
-    if last_type is not None:
-        if last_type is SystemExit:
-            last_value = getattr(sys, "last_value", None)
-            code = getattr(last_value, "code", None) if last_value else None
-            return code not in (None, 0)
-        return True 
+    if _unhandled_exception:
+        return True
 
     return False
 
@@ -444,10 +456,11 @@ def _ping_on_exit():
 _hook_registered = False
 _start_time = time.time() 
 hook_active = False
+_original_excepthook = None
 
 def install_hook():
     """Activate the exit hook, wrap sys.exit, and start heartbeat."""
-    global _hook_registered, hook_active, _start_time, _exit_code, _interceptor
+    global _hook_registered, hook_active, _start_time, _exit_code, _interceptor, _original_excepthook, _unhandled_exception
 
     if _hook_registered:
         return
@@ -492,6 +505,14 @@ def install_hook():
         _exit_code = code
         _original_exit(code)
     sys.exit = _capturing_exit
+
+    # Capture unhandled exceptions
+    _original_excepthook = sys.excepthook
+    def _capturing_excepthook(exc_type, exc_value, exc_traceback):
+        global _unhandled_exception
+        _unhandled_exception = True
+        _original_excepthook(exc_type, exc_value, exc_traceback)
+    sys.excepthook = _capturing_excepthook
 
     # Capture script output for remote "recent logs" feature.
     # On Windows, FD-level dup2 breaks the console (tracebacks → OSError 22).
