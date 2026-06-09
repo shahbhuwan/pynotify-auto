@@ -139,23 +139,12 @@ class TestFailureDetection(unittest.TestCase):
         pynotify_auto._exit_code = "something went wrong"
         self.assertTrue(pynotify_auto._detect_failure())
 
-    def test_value_error_via_last_type(self):
+    def test_unhandled_exception_flag(self):
         from pynotify_auto import _detect_failure
-        sys.last_type = ValueError
-        sys.last_value = ValueError("boom")
+        import pynotify_auto
+        pynotify_auto._unhandled_exception = True
         self.assertTrue(_detect_failure())
-
-    def test_runtime_error_via_last_type(self):
-        from pynotify_auto import _detect_failure
-        sys.last_type = RuntimeError
-        sys.last_value = RuntimeError("oops")
-        self.assertTrue(_detect_failure())
-
-    def test_keyboard_interrupt_via_last_type(self):
-        from pynotify_auto import _detect_failure
-        sys.last_type = KeyboardInterrupt
-        sys.last_value = KeyboardInterrupt()
-        self.assertTrue(_detect_failure())
+        pynotify_auto._unhandled_exception = False
 
 
 class TestHookRegistration(unittest.TestCase):
@@ -167,13 +156,13 @@ class TestHookRegistration(unittest.TestCase):
         importlib.reload(sys.modules["pynotify_auto"])
         self.assertIs(sys.excepthook, original)
 
-    def test_install_hook_does_not_override_excepthook(self):
-        """install_hook() must NOT touch sys.excepthook."""
+    def test_install_hook_overrides_excepthook(self):
+        """install_hook() MUST touch sys.excepthook to capture unhandled exceptions reliably."""
         import pynotify_auto
         importlib.reload(pynotify_auto)
         original = sys.excepthook
         pynotify_auto.install_hook()
-        self.assertIs(sys.excepthook, original)
+        self.assertIsNot(sys.excepthook, original)
 
     def test_install_hook_sets_flag(self):
         import pynotify_auto
@@ -307,16 +296,15 @@ class TestSubprocess(unittest.TestCase):
         self.assertEqual(r.returncode, 0)
         self.assertIn("[SUCCESS]", r.stdout)
 
-    def test_excepthook_untouched_in_subprocess(self):
-        """Verify sys.excepthook is completely untouched after install_hook."""
+    def test_excepthook_overridden_in_subprocess(self):
+        """Verify sys.excepthook is overridden after install_hook."""
         code = (
             "import sys; orig = sys.excepthook; "
             "import pynotify_auto; pynotify_auto.install_hook(); "
             "print('preserved' if sys.excepthook is orig else 'OVERRIDDEN')"
         )
         r = self._run_script(code)
-        self.assertIn("preserved", r.stdout)
-        self.assertNotIn("OVERRIDDEN", r.stdout)
+        self.assertIn("OVERRIDDEN", r.stdout)
 
     def test_no_notification_in_interactive_mode(self):
         """Scripts with IPython in sys.modules should be skipped."""
@@ -339,7 +327,7 @@ class TestCLI(unittest.TestCase):
             capture_output=True, text=True, cwd=PROJECT_ROOT,
         )
         self.assertEqual(r.returncode, 0)
-        self.assertIn("0.5.9", r.stdout)
+        self.assertIn("0.6.1", r.stdout)
 
     def test_cli_info(self):
         r = subprocess.run(
